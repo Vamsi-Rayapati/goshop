@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  mysql:
+    container_name: mysql-service
+    build:
+      context: ./mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./mysql/init.sql:/docker-entrypoint-initdb.d/01.sql"
+      - mysql-data:/var/lib/mysql
+    restart: unless-stopped
+  account:
+    container_name: account-service
+    build:
+      context: ./account
+    ports:
+      - "4001:4001"
+    depends_on:
+      - mysql
+    restart: unless-stopped
+
+  frontend:
+    container_name: frontend-service
+    build:
+      context: ./frontend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+      - account
+    restart: unless-stopped
+volumes:
+  mysql-data:

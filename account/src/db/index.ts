@@ -1,0 +1,12 @@
+import { Sequelize } from "sequelize";
+import config from "../config";
+
+
+console.log(`DB config ${config.DB_HOST}`)
+const sequelize = new Sequelize('account', config.DB_USER_NAME, config.DB_PASSWORD, {
+    host: config.DB_HOST,
+    port: parseInt(config.DB_PORT),
+    dialect: 'mysql'
+});
+
+export default sequelize;
