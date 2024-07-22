@@ -23,5 +23,5 @@ RUN npm install -g serve
 EXPOSE 5000
 
 # Run application
-#CMD [ "npm", "start" ]
-CMD serve -p 5000 -s build
+CMD [ "npm", "start" ]
+# CMD serve -p 5000 -s build

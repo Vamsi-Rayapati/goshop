@@ -4,8 +4,10 @@ class UserService {
     addUser() {
         User.create({
             name:'Vamsi',
-            email:'vamsi.rayapati@gmail.com'
+            email:'vamsi.rayapati@gmail.com',
+            role:'user'
         })
+        
     }
 }
 

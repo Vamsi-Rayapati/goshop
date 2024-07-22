@@ -20,6 +20,8 @@ services:
       - "4001:4001"
     depends_on:
       - mysql
+    volumes:
+      - ./account:/app
     restart: unless-stopped
 
   frontend:
@@ -31,6 +33,8 @@ services:
     depends_on:
       - mysql
       - account
+    volumes:
+      - ./frontend:/app
     restart: unless-stopped
 volumes:
   mysql-data:

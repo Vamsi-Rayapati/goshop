@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.7",
     "@types/express": "^4.17.21",
     "@types/node": "^20.10.4",
     "express": "^4.18.2",
@@ -21,11 +22,14 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",
     "express-validator": "^7.0.1",
+    "mysql": "file:../mysql",
     "mysql2": "^3.9.2",
     "sequelize": "^6.37.1",
-    "mysql": "file:../mysql",
     "uuidv4": "^6.2.13"
   }
 }

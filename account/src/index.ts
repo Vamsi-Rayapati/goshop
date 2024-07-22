@@ -3,6 +3,7 @@ import logger from './middlewares/logger';
 import AccountV1 from './api/v1';
 import config from './config';
 import sequelize from './db';
+import cookieParser from 'cookie-parser';
 
 
 // Config Express
@@ -11,12 +12,9 @@ const app = express();
 // middlewares
 app.use(express.json());
 app.use(logger);
+app.use(cookieParser())
 
-
-//routes
 app.use('/account/api/v1', AccountV1);
-
-// error handling 
 
 
 async function init() {
