@@ -36,5 +36,19 @@ services:
     volumes:
       - ./frontend:/app
     restart: unless-stopped
+  ingress-nginx:
+    container_name: ingress-nginx-service
+    build:
+      context: ./ingress-nginx
+    ports:
+      - 80:80
+    depends_on:
+      - mysql
+      - account
+      - frontend
+    volumes:
+      - ./ingress-nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
+    restart: unless-stopped
+
 volumes:
   mysql-data:
