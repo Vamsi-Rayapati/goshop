@@ -28,6 +28,8 @@ services:
     container_name: frontend-service
     build:
       context: ./frontend
+      target: dev
+
     ports:
       - "5000:5000"
     depends_on:
@@ -46,8 +48,6 @@ services:
       - mysql
       - account
       - frontend
-    volumes:
-      - ./ingress-nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf:ro
     restart: unless-stopped
 
 volumes:

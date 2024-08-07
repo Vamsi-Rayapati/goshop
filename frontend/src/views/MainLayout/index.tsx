@@ -41,16 +41,11 @@ const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOu
 
 function MainLayout() {
 
+
+  
+
   return (
     <Layout style={{height:'100vh'}}>
-      <Header style={{ display: 'flex', alignItems: 'center',gap:'1rem', paddingLeft:'1rem' }}>
-        <FcFolder size={30}/>
-        <span className='text-t2' style={{color:'white'}}>File Player</span>
-        {/* <Link to={"/compress"}>Compress</Link> */}
-
-        <Link>Compress</Link>
-        <div style={{color:'white'}}>{true}</div>
-      </Header>
 
       <Layout style={{ padding: '0 24px 24px' }}>
         <Outlet/>
