@@ -1,20 +1,16 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '..';
+import { IUser } from '../../api/v1/types/users_types';
 
-interface UserAttributes {
-  id: number;
-  name: string;
-  email: string;
-  role: 'operator'|'admin'|'user';
-}
 
-interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+interface UserCreationAttributes extends Optional<IUser, 'id'> {}
 
-class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
-  public id!: number;
-  public name!: string;
-  public email!: string;
-  public role!: 'operator' | 'admin' | 'user';
+class User extends Model<IUser, UserCreationAttributes> implements IUser {
+  public id: number;
+  public firstName: string;
+  public lastName: string;
+  public email: string;
+  public role: 'operator' | 'admin' | 'user';
 }
 
 User.init(
@@ -24,7 +20,11 @@ User.init(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    name: {
+    firstName: {
+      type: new DataTypes.STRING(128),
+      allowNull: false,
+    },
+    lastName: {
       type: new DataTypes.STRING(128),
       allowNull: false,
     },
