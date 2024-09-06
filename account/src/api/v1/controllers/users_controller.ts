@@ -6,30 +6,31 @@ import validate from "../../../utils/validate";
 
 
 async function postUser(request: Request, response: Response) {
-   const user = await validate(User,request.body)
+    const user = await validate(User,request.body)
     const savedUser = await users_service.postUser(user);
-    // console.log('saved...............')
     response.json(savedUser);
 }
 
 async function getUsers(request: Request, response: Response) {
     const users = await users_service.getUsers();
-
     response.json({
         users: users
     });
 }
 
 async function getUser(request: Request, response: Response) {
-
+    const user = await users_service.getUser(request.params.userId);
+    response.json(user);
 }
 
 async function patchUser(request: Request, response: Response) {
-
+    const user = await users_service.patchUser(request.params.userId,request.body);
+    response.json(user);
 }
 
 async function deleteUser(request: Request, response: Response) {
-
+    const user = await users_service.deleteUser(request.params.userId);
+    response.json(user);
 }
 
 

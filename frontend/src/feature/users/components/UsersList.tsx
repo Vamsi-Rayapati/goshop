@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import useFetch from 'feature/base/hooks/useFetch';
 import { USERS_API } from '../constants';
 import moment from 'moment';
+import UsersListActions from './UsersListActions';
 
 const colors = {
   operator: 'geekblue',
@@ -39,33 +40,27 @@ const staticColumns: TableProps<User>['columns'] = [
     }
 ]
 
+interface Props {
+  loading: boolean;
+  users: User[];
+  onDelete: (user: User)=> void;
+  onEdit: (user: User)=> void;
+}
 
+function UsersList({users,loading,onDelete,onEdit}: Props) {
+    
+  const columns: TableProps<User>['columns'] = [
+    ...staticColumns??[],
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => <UsersListActions user={record} onDelete={onDelete} onEdit={onEdit}/>,
+    },
+  ];
 
-function UsersList() {
-    const [usersRes,getUsersReq] = useFetch<{users:User[]}>();
-
-    const columns: TableProps<User>['columns'] = [
-      ...staticColumns??[],
-      {
-        title: 'Action',
-        key: 'action',
-        render: (_, record) => (
-          <div>
-            <Button type={'link'}>Edit</Button>
-            <Button type={'link'}>Delete</Button>
-          </div>
-        ),
-      },
-    ];
-    useEffect(()=> {
-        getUsersReq({
-          url: USERS_API,
-          method: 'GET'
-        });
-    },[]);
-    return (
-        <Table loading={usersRes.isLoading} columns={columns} dataSource={usersRes.data.users} />
-    )
+  return (
+      <Table loading={loading} columns={columns} dataSource={users} />
+  )
 }
 
 export default UsersList;

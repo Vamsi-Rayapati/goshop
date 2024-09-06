@@ -1,5 +1,5 @@
-import { Form, Input, Modal, Select } from 'antd'
-import React, { useRef, useState } from 'react'
+import { Form, Input, Modal, Select, Spin } from 'antd'
+import React, { useEffect, useRef, useState } from 'react'
 import { User } from '../types';
 import { DefaultOptionType } from 'antd/es/select';
 import useFetch from 'feature/base/hooks/useFetch';
@@ -7,8 +7,10 @@ import { USERS_API } from '../constants';
 
 
 interface Props {
-    open: boolean;
+    userId?: string;
     onClose: ()=> void;
+    onSubmit: (user: Partial<User>) => void;
+    loading: boolean;
 }
 
 const roleOptions: DefaultOptionType[] = [
@@ -18,33 +20,57 @@ const roleOptions: DefaultOptionType[] = [
 ]
 
 
-function UserForm({open,onClose}:Props) {
+function UserForm({onClose,onSubmit,loading, userId}:Props) {
+    const title = userId ? 'Edit User' : 'Add User';
+    const [changedFields, setChangedFields] = useState<Partial<User>>({});
+    const [getUserRes, getUserReq] = useFetch<User>();
+    const [form] = Form.useForm();
 
-    const [createUserRes, createUserReq] = useFetch();
+    const onValuesChange = (changedValues: Partial<User>) => {
+        setChangedFields((prev) => ({
+          ...prev,
+          ...changedValues,
+        }));
+    };
 
-    const onFinish = (values: User) => {
-        createUserReq({
-            url: USERS_API,
-            method: 'POST',
-            data: values
-        });
-        console.log(values)
+    useEffect(()=> {
+        if(userId) {
+            getUserReq({
+                url: `${USERS_API}/${userId}`,
+                method: 'GET'
+            });
+        }
+        
+    },[])
+
+
+    useEffect(()=> {
+        if(getUserRes.isSuccess) {
+            form.setFieldsValue(getUserRes.data);
+        }
+
+    },[getUserRes])
+
+    const onFinish = (values:User) => {
+        if(userId) onSubmit(changedFields);
+        else onSubmit(values);
     }
 
+    console.log(changedFields);
     return (
         <Modal
             onClose={onClose}
             onCancel={onClose}
-            onOk={()=> console.log('Hello')}
-            open={open}
-            title={'Add User'}
+            open={true}
+            title={title}
             okText={'Submit'}
-            okButtonProps={{htmlType:'submit', form: 'user-form', loading: createUserRes.isLoading}}>
+            okButtonProps={{htmlType:'submit', form: 'user-form', loading: loading}}>
+            <Spin spinning={getUserRes.isLoading}>
             <Form
                 id='user-form'
-                // initialValues={{ remember: true }}
-                onFinish={onFinish}
-            >
+                onValuesChange={onValuesChange}
+                form={form}
+                onFinish={onFinish}>
                 <Form.Item<User>
                     label="First Name"
                     name={'firstName'}
@@ -79,6 +105,7 @@ function UserForm({open,onClose}:Props) {
                 </Form.Item>
 
             </Form>
+            </Spin>
 
         </Modal>
     )
