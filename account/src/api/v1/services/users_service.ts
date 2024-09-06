@@ -3,7 +3,9 @@ import { IUser } from "../types/users_types";
 
 
 async function postUser(user: IUser) {
-    User.create(user)
+    const data= await User.create(user);
+    console.log(data);
+    return data;
 }
 
 async function getUsers(): Promise<IUser[]> {

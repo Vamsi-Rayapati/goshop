@@ -1,26 +1,19 @@
-import { plainToClass } from "class-transformer";
-import { validate } from "class-validator";
 import { Request, Response } from "express";
 import { User } from "../models/user_models";
 import users_service from "../services/users_service";
+import gaurd from "../../../utils/gaurd";
+import validate from "../../../utils/validate";
 
 
 async function postUser(request: Request, response: Response) {
-
-    const user = plainToClass(User,request.body)
-    await validate(user)
-    const savedUser = users_service.postUser(user);
-    response.sendStatus(200);
+   const user = await validate(User,request.body)
+    const savedUser = await users_service.postUser(user);
+    // console.log('saved...............')
+    response.json(savedUser);
 }
 
 async function getUsers(request: Request, response: Response) {
     const users = await users_service.getUsers();
-
-    // response.sendStatus(200)  
-    // response.setHeader('Content-Type', 'application/json');
-    // response.send(JSON.stringify({
-    //     users: []
-    // }))
 
     response.json({
         users: users
@@ -41,9 +34,9 @@ async function deleteUser(request: Request, response: Response) {
 
 
 export default {
-    getUsers,
-    getUser,
-    postUser,
-    patchUser,
-    deleteUser,
+    getUsers: gaurd(getUsers),
+    getUser: gaurd(getUser),
+    postUser: gaurd(postUser),
+    patchUser: gaurd(patchUser),
+    deleteUser: gaurd(deleteUser)
 };

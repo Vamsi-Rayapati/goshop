@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig, Canceler, type AxiosResponse as Response } from 'axios';
 import { useCallback, useRef, useState } from 'react';
 import apiService from '../utils/ApiService';
+import { message } from 'antd';
 
 export interface IResponse<T> {
     data: T;
@@ -32,7 +33,6 @@ const useFetch = <T>(): [IResponse<T>, (config: AxiosRequestConfig)=> void] => {
         
         try {
             const res = await apiService.request<T>(config);
-            console.log(res)
             setResponse({
                 ...response,
                 data: res.data,
@@ -40,12 +40,14 @@ const useFetch = <T>(): [IResponse<T>, (config: AxiosRequestConfig)=> void] => {
                 isSuccess: true,
                 isLoading: false
             });
-        } catch(err:any) {
+        } catch(error:any) {
+            const data = error.response.data;
+            message.error(data.message ?? "Something went wrong")
             setResponse({
                 ...response,
-                data: err.data,
-                message: err.reason,
-                statusCode: err.status,
+                data: data,
+                message: data.message,
+                statusCode: error.status,
                 isFailed: true,
                 isLoading: false
             });

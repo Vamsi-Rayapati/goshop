@@ -1,7 +1,9 @@
 import { Form, Input, Modal, Select } from 'antd'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { User } from '../types';
 import { DefaultOptionType } from 'antd/es/select';
+import useFetch from 'feature/base/hooks/useFetch';
+import { USERS_API } from '../constants';
 
 
 interface Props {
@@ -17,12 +19,31 @@ const roleOptions: DefaultOptionType[] = [
 
 
 function UserForm({open,onClose}:Props) {
-    const formRef = useRef();
+
+    const [createUserRes, createUserReq] = useFetch();
+
+    const onFinish = (values: User) => {
+        createUserReq({
+            url: USERS_API,
+            method: 'POST',
+            data: values
+        });
+        console.log(values)
+    }
+
     return (
-    <Modal onClose={onClose} open={open} title={'Add User'} okButtonProps={{}}>
+        <Modal
+            onClose={onClose}
+            onCancel={onClose}
+            onOk={()=> console.log('Hello')}
+            open={open}
+            title={'Add User'}
+            okText={'Submit'}
+            okButtonProps={{htmlType:'submit', form: 'user-form', loading: createUserRes.isLoading}}>
             <Form
+                id='user-form'
                 // initialValues={{ remember: true }}
-                // onFinish={onFinish}
+                onFinish={onFinish}
             >
                 <Form.Item<User>
                     label="First Name"
@@ -34,6 +55,7 @@ function UserForm({open,onClose}:Props) {
                 <Form.Item<User>
                     label="Last Name"
                     name={'lastName'}
+                    rules={[{ required: true, message: 'Please input your first name!' }]}
                     >
                     <Input />
                 </Form.Item>
@@ -58,7 +80,7 @@ function UserForm({open,onClose}:Props) {
 
             </Form>
 
-    </Modal>
+        </Modal>
     )
 }
 

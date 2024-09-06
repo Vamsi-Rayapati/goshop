@@ -20,13 +20,8 @@ class ApiService  {
          // Handle and display the error
          if (axios.isAxiosError(error)) {
             // Handle Axios-specific errors
-            console.error('Axios error:', error.message);
+            console.error('Axios error:', error);
             // You can also access error.response if needed
-            if (error.response) {
-               console.error('Response data:', error.response.data);
-               console.error('Response status:', error.response.status);
-               console.error('Response headers:', error.response.headers);
-            }
          } else {
             // Handle non-Axios errors
             console.error('Error:', error);

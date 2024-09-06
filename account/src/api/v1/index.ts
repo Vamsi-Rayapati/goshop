@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post('/users',users_controller.postUser);
 router.get('/users',users_controller.getUsers);
-router.post('/users',users_controller.getUser);
+// router.post('/users',users_controller.getUser);
 // router.get('/users',users_controller.getUsers);
 
 
