@@ -14,8 +14,8 @@ function UsersListActions({onDelete,onEdit, user}: Props) {
         <div>
             <Button onClick={handleEdit} type={'link'}>Edit</Button>
             <Popconfirm
-                title="Delete the task"
-                description="Are you sure to delete this task?"
+                title="Delete the user"
+                description="Are you sure to delete this user?"
                 onConfirm={handleDelete}
                 okText="Yes"
                 cancelText="No">

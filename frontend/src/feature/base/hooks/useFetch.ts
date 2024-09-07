@@ -13,7 +13,7 @@ export interface IResponse<T> {
 }
 
 
-const useFetch = <T>(): [IResponse<T>, (config: AxiosRequestConfig)=> void] => {
+function useFetch<T>(): [IResponse<T>, (config: AxiosRequestConfig)=> Promise<IResponse<T>>] {
     const [ response, setResponse ] = useState<IResponse<T>>({
         data: {} as T,
         isLoading: false,
@@ -21,7 +21,7 @@ const useFetch = <T>(): [IResponse<T>, (config: AxiosRequestConfig)=> void] => {
         isFailed: false
     });
     
-    const sendRequest = useCallback(async(config: AxiosRequestConfig) => {
+    const sendRequest = useCallback(async(config: AxiosRequestConfig) :Promise<IResponse<T>> => {
         setResponse((prevResponse: IResponse<T>) => {
             return {
                 ...prevResponse,
@@ -33,25 +33,28 @@ const useFetch = <T>(): [IResponse<T>, (config: AxiosRequestConfig)=> void] => {
         
         try {
             const res = await apiService.request<T>(config);
-            setResponse({
+            const newResponse = {
                 ...response,
                 data: res.data,
                 statusCode: res.status,
                 isSuccess: true,
                 isLoading: false
-            });
+            }
+            setResponse(newResponse);
+            return newResponse;
         } catch(error:any) {
             const data = error.response.data;
             message.error(data.message ?? "Something went wrong")
-            setResponse({
+            const newResponse = {
                 ...response,
                 data: data,
                 message: data.message,
                 statusCode: error.status,
                 isFailed: true,
                 isLoading: false
-            });
-
+            }
+            setResponse(newResponse);
+            return newResponse;
         }
     }, [ response ]);
 

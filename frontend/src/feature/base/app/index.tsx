@@ -1,4 +1,4 @@
-import { ConfigProvider } from 'antd'
+import { ConfigProvider, theme } from 'antd'
 import React from 'react'
 import { RouterProvider } from 'react-router-dom'
 import router from '../router'
@@ -13,7 +13,7 @@ function App() {
         // colorPrimary: '#00b96b'
       }
     }}>
-      <RouterProvider router={router} />
+      <RouterProvider  router={router} />
     </ConfigProvider>
   )
 }
