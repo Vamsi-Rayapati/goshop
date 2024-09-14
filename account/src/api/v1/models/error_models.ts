@@ -31,7 +31,7 @@ export class ValidationError extends BaseError {
 
 export class NotFoundError extends BaseError {
     constructor(message: string, details?: object) {
-        super(message,404,details)
+        super(message,404,details);
     }
 }
 

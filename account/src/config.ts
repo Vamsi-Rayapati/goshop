@@ -11,6 +11,6 @@ interface Config extends NodeJS.ProcessEnv {
     DB_PASSWORD:string
 }
 
-const config = process.env as Config
+const config = process.env as Config;
 
-export default config
+export default config;

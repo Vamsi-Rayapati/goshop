@@ -1,6 +1,6 @@
-import { ClassConstructor, plainToClass } from "class-transformer";
-import { validate as check } from "class-validator";
-import { ValidationDetail, ValidationError } from "../api/v1/models/error_models";
+import { ClassConstructor, plainToClass } from 'class-transformer';
+import { validate as check } from 'class-validator';
+import { ValidationDetail, ValidationError } from '../api/v1/models/error_models';
 
 async function validate<T,V>(cls: ClassConstructor<T>, plain: V | V[]): Promise<T> {
     const model = plainToClass(cls,plain);
@@ -10,7 +10,7 @@ async function validate<T,V>(cls: ClassConstructor<T>, plain: V | V[]): Promise<
         const details:ValidationDetail[]  = result.map((error)=> ({
             property: error.property,
             reason: error.constraints ? Object.values(error.constraints)[0] : 'Invalid'
-        }))
+        }));
         throw new ValidationError('Input Validation Error', details);        
     }
 

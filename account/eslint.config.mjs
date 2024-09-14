@@ -1,11 +1,24 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
+import globals from 'globals';
+import pluginJs from '@eslint/js';
+import tseslint from 'typescript-eslint';
 
 
 export default [
-  {files: ["**/*.{js,mjs,cjs,ts}"]},
+  {files: ['**/*.{js,mjs,cjs,ts}']},
   {languageOptions: { globals: globals.browser }},
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
+  {
+    rules: {
+      'semi': ['error', 'always'],
+      'quotes': ['error', 'single'],
+      'key-spacing': [
+        'error',
+        {
+          'beforeColon': false,
+          'afterColon': true
+        }
+      ]
+    }
+  }
 ];

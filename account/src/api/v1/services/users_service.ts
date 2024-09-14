@@ -1,6 +1,6 @@
-import User from "../../../db/models/User";
-import { NotFoundError } from "../models/error_models";
-import { IUser } from "../types/users_types";
+import User from '../../../db/models/User';
+import { NotFoundError } from '../models/error_models';
+import { IUser } from '../types/users_types';
 
 
 async function postUser(user: IUser): Promise<User> {
@@ -9,12 +9,12 @@ async function postUser(user: IUser): Promise<User> {
 }
 
 async function getUsers(): Promise<User[]> {
-    const users = await User.findAll({raw:true});
+    const users = await User.findAll({raw: true});
     return users;
 }
 
 async function getUser(userId: string): Promise<User> {
-    const user = await User.findOne({raw:true,
+    const user = await User.findOne({raw: true,
         where: {
             id: userId
         }
@@ -53,4 +53,4 @@ export default {
     getUser,
     deleteUser,
     patchUser
-}
+};
