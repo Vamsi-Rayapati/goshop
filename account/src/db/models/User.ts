@@ -3,7 +3,7 @@ import sequelize from '..';
 import { IUser } from '../../api/v1/types/users_types';
 
 
-interface UserCreationAttributes extends Optional<IUser, 'id'> {}
+type UserCreationAttributes = Optional<IUser, 'id'>
 
 class User extends Model<IUser, UserCreationAttributes> implements IUser {
   public id: number;

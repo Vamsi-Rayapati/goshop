@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { UniqueConstraintError, ValidationError as SqlValidationError } from "sequelize";
 import { BaseError, ValidationDetail, ValidationError } from "../api/v1/models/error_models";
 
-function handleError(error: any,next: NextFunction) {
+function handleError(error: unknown,next: NextFunction): void {
     try {
         if(error instanceof UniqueConstraintError) {
             const sqlError = error.errors[0];
@@ -25,8 +25,8 @@ function handleError(error: any,next: NextFunction) {
     }
 }
 
-function gaurd(callback: Function) {
-    return async (req:Request,res:Response,next: NextFunction) => {
+function gaurd(callback: CallableFunction) {
+    return async (req:Request,res:Response,next: NextFunction): Promise<void> => {
         try {
             await callback(req,res,next)
         } catch(err) {

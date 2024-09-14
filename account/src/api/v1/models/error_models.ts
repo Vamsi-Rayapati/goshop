@@ -2,7 +2,7 @@
 interface IError {
     code: number;
     message: string;
-    details?: any;
+    details?: object;
 }
 
 export interface ValidationDetail {
@@ -13,9 +13,9 @@ export interface ValidationDetail {
 export class BaseError implements IError {
     code: number;
     message: string;
-    details?: any;
+    details?: object;
 
-    constructor(message: string,code:number,details?: any) {
+    constructor(message: string,code:number,details?: object) {
         this.code=code;
         this.message=message;
         this.details=details;
@@ -30,7 +30,7 @@ export class ValidationError extends BaseError {
 }
 
 export class NotFoundError extends BaseError {
-    constructor(message: string, details?: any) {
+    constructor(message: string, details?: object) {
         super(message,404,details)
     }
 }

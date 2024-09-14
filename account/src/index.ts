@@ -20,7 +20,7 @@ app.use('/account/api/v1', AccountV1);
 
 // response middlewares
 app.use(errorHandler)
-async function init() {
+async function init(): Promise<void> {
 
   await sequelize.sync()
 

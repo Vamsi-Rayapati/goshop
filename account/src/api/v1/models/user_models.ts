@@ -10,6 +10,7 @@ export class User implements IUser {
 
   @IsNotEmpty()
   firstName: string;
+  
   @IsNotEmpty()
   lastName: string;
   @IsNotEmpty()
