@@ -22,4 +22,6 @@ export default [
   },
   ...compat.extends('airbnb-base'),
   ...compat.extends('airbnb-typescript/base'),
+  ...compat.extends('plugin:@typescript-eslint/recommended'),
+  ...compat.extends('plugin:@typescript-eslint/recommended-requiring-type-checking'),
 ];
