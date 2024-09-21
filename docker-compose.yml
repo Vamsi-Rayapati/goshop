@@ -30,6 +30,18 @@ services:
     # volumes:
     #   - fusionauth_config:/usr/local/fusionauth/config
     restart: unless-stopped
+  
+  auth:
+    container_name: auth-service
+    build:
+      context: ./auth
+    ports:
+      - "4002:4002"
+    depends_on:
+      - mysql
+    volumes:
+      - ./auth:/app
+    restart: unless-stopped
 
   account:
     container_name: account-service
@@ -63,6 +75,7 @@ services:
       - mysql
       - account
       - frontend
+      - auth
     restart: unless-stopped
 
 volumes:
