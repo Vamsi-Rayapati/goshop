@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   DesktopOutlined,
   FileOutlined,
@@ -52,6 +52,16 @@ const MainLayout: React.FC = (props) => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+
+  useEffect(()=> {
+    const token = localStorage.getItem('token')
+    if(token) {
+      navigate('/console/users')
+    } else {
+      navigate('/auth/login')
+    }
+  },[]);
 
   const navigate = useNavigate();
 

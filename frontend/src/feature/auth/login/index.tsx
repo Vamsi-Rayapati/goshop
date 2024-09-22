@@ -19,7 +19,7 @@ function Login() {
         });
 
         if(res.isSuccess) {
-            navigate('/console/users');
+            navigate('/console');
         }
 
     }

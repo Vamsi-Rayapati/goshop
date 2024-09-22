@@ -25,6 +25,7 @@ function handleError(error: unknown, next:NextFunction): void {
       throw new BaseError('Something went wrong', 500);
     }
   } catch (err) {
+    console.log('Gaurd',err);
     next(err);
   }
 }

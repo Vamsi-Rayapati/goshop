@@ -10,7 +10,7 @@ import Signup from "feature/auth/signup";
 const router = createBrowserRouter([
     {
       path: '/',
-      element: <Navigate to={'/auth/login'}/>
+      element:  <Navigate to={localStorage.getItem('token') ? '/console/users':'/auth/login'}/> 
     },
     {
       path: "/console",

@@ -1,5 +1,5 @@
 export const route = {
-    profile: '/profile',
-    users: '/users',
-    orders: '/orders'
+    profile: '/console/profile',
+    users: '/console/users',
+    orders: '/console/orders'
 }

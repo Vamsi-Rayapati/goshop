@@ -20,7 +20,7 @@ function Signup() {
         });
 
         if(res.isSuccess) {
-            // navigate('/console/users');
+            navigate('/console');
         }
 
     }
@@ -37,6 +37,7 @@ function Signup() {
                 initialValues={{ remember: true }}
                 onFinish={onFinish}
                 variant={'filled'}
+                size={'large'}
                 autoComplete="off"
             >
             <Form.Item<SignupForm>
@@ -44,7 +45,7 @@ function Signup() {
             name="email"
             rules={[{ required: true, message: 'Please input your email!' }]}
             >
-            <Input  size={'large'} />
+            <Input  />
             </Form.Item>
 
            
@@ -53,13 +54,13 @@ function Signup() {
                 name="firstName"
                 rules={[{ required: true, message: 'Please input your First Name!' }]}
                 >
-                <Input  size={'large'} />
+                <Input  />
             </Form.Item>
             <Form.Item<SignupForm>
                 label="Last Name"
                 name="lastName"
                 >
-                <Input  size={'large'}/>
+                <Input />
             </Form.Item>
             
 
@@ -68,14 +69,18 @@ function Signup() {
             name="password"
             rules={[{ required: true, message: 'Please input your password!' }]}
             >
-            <Input.Password  size={'large'} />
+            <Input.Password  />
             </Form.Item>
 
             <Form.Item className='self-center'>
-            <Button type="primary" htmlType="submit" loading={signupRes.isLoading}  size={'large'}>
+            <Button type="primary" htmlType="submit" loading={signupRes.isLoading} >
                 Submit
             </Button>
             </Form.Item>
+            <div className='flex items-center self-center'>
+                    <span>Already having account ?</span> 
+                    <Button type={'link'} onClick={()=> navigate('/auth/login')}>Login</Button>
+            </div>
             </Form>
             </Card>
         </div>
