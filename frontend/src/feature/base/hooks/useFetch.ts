@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig, Canceler, type AxiosResponse as Response } f
 import { useCallback, useRef, useState } from 'react';
 import apiService from '../utils/ApiService';
 import { message } from 'antd';
+import { sleep } from '../utils/common_utils';
 
 export interface IResponse<T> {
     data: T;
@@ -30,7 +31,7 @@ function useFetch<T>(): [IResponse<T>, (config: AxiosRequestConfig)=> Promise<IR
                 isFailed: false
             };
         });
-        
+        // await sleep(1000);
         try {
             const res = await apiService.request<T>(config);
             const newResponse = {

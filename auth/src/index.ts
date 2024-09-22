@@ -13,17 +13,12 @@ app.use(express.json());
 app.use(logger);
 app.use(cookieParser());
 
-
-app.use('/', (req,res)=> {
-  res.send("Hello")
-})
 // route handlers
 app.use('/auth/api/v1', AuthV1);
 
 // response middlewares
 app.use(errorHandler);
 async function init(): Promise<void> {
-
   app.listen(config.PORT, () => {
     console.log(`Server is running at http://localhost:${config.PORT}`);
   });

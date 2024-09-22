@@ -8,6 +8,11 @@ interface Config extends NodeJS.ProcessEnv {
   DB_PORT:string
   DB_USER_NAME:string
   DB_PASSWORD:string
+  FA_CLIENT_ID: string;
+  FA_SECRET: string;
+  FA_URL: string;
+  FA_API_KEY: string;
+  FA_APP_ID: string;
 }
 
 const config = process.env as Config;

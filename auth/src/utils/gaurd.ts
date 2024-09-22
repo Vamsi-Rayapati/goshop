@@ -18,8 +18,11 @@ function handleError(error: unknown, next:NextFunction): void {
       }));
 
       throw new ValidationError('Input Invalidation Error', details);
-    } else {
-      throw new BaseError('Internal Server Error', 500);
+    } else if(error instanceof BaseError) {
+      throw error;
+    }
+    else {
+      throw new BaseError('Something went wrong', 500);
     }
   } catch (err) {
     next(err);
