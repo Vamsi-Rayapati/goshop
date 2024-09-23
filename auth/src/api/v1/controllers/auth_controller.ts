@@ -4,29 +4,15 @@ import gaurd from '../../../utils/gaurd';
 import config from '../../../config';
 import validate from '../../../utils/validate';
 import { RegisterUser } from '../models/auth_models';
+import auth_service from '../services/auth_service';
 
 async function signup(req: Request, res: Response) {
   const user = await validate(RegisterUser, req.body);
-  try {
-    const regRes = await authClient.register('', {
-      registration: {
-        applicationId: config.FA_APP_ID,
-      },
-      user: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        password: user.password,
-      },
-    });
-    res.status(201).json({
-        token: regRes.response.token,
-        refreshToken: regRes.response.refreshToken
-    });
-  } catch (error) {
-    console.error(error);
-    // throw
-  }
+  const response =  await auth_service.signup(user);
+  res.status(201).json({
+      token: response.token,
+      refreshToken: response.refreshToken
+  });
 }
 
 async function login() {
