@@ -7,9 +7,14 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Breadcrumb, Layout, Menu, Spin, theme } from 'antd';
 import { Outlet, useNavigate, useNavigation } from 'react-router-dom';
-import { route } from '../router/constants';
+import { ROUTE } from '../router/constants';
+import AppHeader from './Header';
+import useFetch from '../hooks/useFetch';
+import { User } from 'feature/users/types';
+import { USERS_API } from 'feature/users/constants';
+import { parseJWT } from 'feature/auth/functions';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -32,17 +37,17 @@ function getItem(
 const items: MenuItem[] = [
   {
     label: 'Profile',
-    key: route.profile,
+    key: ROUTE.PROFILE,
     icon:  <UserOutlined />
   },
   {
     label: 'Users',
-    key: route.users,
+    key: ROUTE.USERS,
     icon: <TeamOutlined/>
   },
   {
     label: 'Orders',
-    key: route.orders,
+    key: ROUTE.ORDERS,
     icon: <PieChartOutlined />
   }
 ];
@@ -53,14 +58,22 @@ const MainLayout: React.FC = (props) => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  const [getUserRes, getUserReq] = useFetch<User>();
+
 
   useEffect(()=> {
-    const token = localStorage.getItem('token')
-    if(token) {
-      navigate('/console/users')
-    } else {
-      navigate('/auth/login')
-    }
+    const user = parseJWT();
+    getUserReq({
+      url: `${USERS_API}/${user?.id}`,
+      method: 'GET',
+    })
+    .then(res=> {
+      if(res.isSuccess) {
+        navigate(ROUTE.USERS)
+      } else {
+        if(res.statusCode=404) navigate(ROUTE.ONBOARDING);
+      }
+    })
   },[]);
 
   const navigate = useNavigate();
@@ -70,6 +83,16 @@ const MainLayout: React.FC = (props) => {
     navigate(e.key)
     
   };
+  useEffect(()=> {
+    window.navigate = navigate;
+  },[])
+
+  if(getUserRes.isLoading) return (
+    <div style={{height: '100vh', display:'flex', alignItems:'center', justifyContent:'center'}}>
+      <Spin/>
+    </div>
+  )
+  
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -78,12 +101,8 @@ const MainLayout: React.FC = (props) => {
         <Menu theme="dark" defaultSelectedKeys={['1']} onClick={onClick} mode="inline" items={items} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
+       <AppHeader/>
         <Content style={{ margin: '0 16px' }}>
-          {/* <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb> */}
           <Outlet/>
         </Content>
         <Footer style={{ textAlign: 'center' }}>

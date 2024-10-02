@@ -8,5 +8,6 @@ router.get('/users', users_controller.getUsers);
 router.get('/users/:userId', users_controller.getUser);
 router.delete('/users/:userId', users_controller.deleteUser);
 router.patch('/users/:userId', users_controller.patchUser);
+router.post('/internal/users', users_controller.internalPostUser);
 
 export default router;

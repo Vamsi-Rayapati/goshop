@@ -2,6 +2,7 @@ import { Button, Card, Form, FormProps, Input } from 'antd'
 import useFetch from 'feature/base/hooks/useFetch'
 import { LOGIN_URL } from '../constants';
 import { useNavigate } from 'react-router-dom';
+import { ROUTE } from 'feature/base/router/constants';
 
 
 
@@ -19,7 +20,7 @@ function Login() {
         });
 
         if(res.isSuccess) {
-            navigate('/console');
+            navigate(ROUTE.CONSOLE);
         }
 
     }
@@ -40,7 +41,9 @@ function Login() {
                 <Form.Item<SignupForm>
                     label="Email"
                     name="email"
-                    rules={[{ required: true, message: 'Please input your email!' }]}
+                    rules={[
+                        { type: 'email', message: 'The input is not valid E-mail!'},
+                        { required: true, message: 'Please input your email!' }]}
                     >
                     <Input />
                 </Form.Item>

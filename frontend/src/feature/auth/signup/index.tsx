@@ -3,6 +3,7 @@ import useFetch from 'feature/base/hooks/useFetch'
 import React from 'react'
 import { SIGNUP_URL } from '../constants';
 import { useNavigate } from 'react-router-dom';
+import { ROUTE } from 'feature/base/router/constants';
 
 
 
@@ -20,7 +21,7 @@ function Signup() {
         });
 
         if(res.isSuccess) {
-            navigate('/console');
+            navigate(ROUTE.ONBOARDING);
         }
 
     }
@@ -43,24 +44,11 @@ function Signup() {
             <Form.Item<SignupForm>
             label="Email"
             name="email"
-            rules={[{ required: true, message: 'Please input your email!' }]}
+            rules={[
+                { type: 'email', message: 'The input is not valid E-mail!'},
+                { required: true, message: 'Please input your email!' }]}
             >
             <Input  />
-            </Form.Item>
-
-           
-            <Form.Item<SignupForm>
-                label="First Name"
-                name="firstName"
-                rules={[{ required: true, message: 'Please input your First Name!' }]}
-                >
-                <Input  />
-            </Form.Item>
-            <Form.Item<SignupForm>
-                label="Last Name"
-                name="lastName"
-                >
-                <Input />
             </Form.Item>
             
 
@@ -74,7 +62,7 @@ function Signup() {
 
             <Form.Item className='self-center'>
             <Button type="primary" htmlType="submit" loading={signupRes.isLoading} >
-                Submit
+                Create Account
             </Button>
             </Form.Item>
             <div className='flex items-center self-center'>

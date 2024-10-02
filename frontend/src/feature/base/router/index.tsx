@@ -5,39 +5,36 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import AuthLayout from "feature/auth";
 import Login from "feature/auth/login";
 import Signup from "feature/auth/signup";
+import { ROUTE } from "./constants";
+import Onboarding from "feature/auth/onboarding";
 
 
 const router = createBrowserRouter([
     {
       path: '/',
-      element:  <Navigate to={localStorage.getItem('token') ? '/console/users':'/auth/login'}/> 
+      element:  <Navigate to={localStorage.getItem('token') ? ROUTE.CONSOLE:ROUTE.LOGIN}/> 
     },
     {
-      path: "/console",
+      path: ROUTE.CONSOLE,
       element: <MainLayout/>,
       children: [
         {
-            path: "/console/users",
+            path: ROUTE.USERS,
             element: <Users/>
         },
         {
-          path: "/console/profile",
+          path: ROUTE.PROFILE,
           element: <Users/>
         },
         {
-          path: "/console/orders",
+          path: ROUTE.ORDERS,
           element: <Orders/>
         }
       ]
     },
-    {
-      path: '/auth/login',
-      element: <Login/>
-    },
-    {
-      path: '/auth/signup',
-      element: <Signup/>
-    }
+    { path: ROUTE.LOGIN, element: <Login/>},
+    { path: ROUTE.SIGNUP, element: <Signup/>},
+    { path: ROUTE.ONBOARDING, element: <Onboarding/>}
     
 ]);
 

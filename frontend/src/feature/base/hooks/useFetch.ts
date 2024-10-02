@@ -31,7 +31,7 @@ function useFetch<T>(): [IResponse<T>, (config: AxiosRequestConfig)=> Promise<IR
                 isFailed: false
             };
         });
-        // await sleep(1000);
+        await sleep(1000);
         try {
             const res = await apiService.request<T>(config);
             const newResponse = {

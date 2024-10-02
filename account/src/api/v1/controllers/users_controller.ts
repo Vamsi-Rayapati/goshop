@@ -32,10 +32,17 @@ async function deleteUser(request: Request, response: Response): Promise<void> {
   response.json(user);
 }
 
+async function internalPostUser(request: Request, response: Response): Promise<void> {
+  const user = await validate(User, request.body);
+  const savedUser = await users_service.postUser(user);
+  response.json(savedUser);
+}
+
 export default {
   getUsers: gaurd(getUsers),
   getUser: gaurd(getUser),
   postUser: gaurd(postUser),
   patchUser: gaurd(patchUser),
   deleteUser: gaurd(deleteUser),
+  internalPostUser: gaurd(internalPostUser)
 };
