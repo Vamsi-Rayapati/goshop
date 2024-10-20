@@ -9,6 +9,7 @@ import auth_service from '../services/auth_service';
 async function signup(req: Request, res: Response) {
   const user = await validate(RegisterUser, req.body);
   const response = await auth_service.signup(user);
+  console.log('VRRR Res', response)
   res.status(201).json({
     token: response.token,
     refreshToken: response.refreshToken,
