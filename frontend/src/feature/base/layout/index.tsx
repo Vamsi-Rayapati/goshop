@@ -70,8 +70,6 @@ const MainLayout: React.FC = (props) => {
     .then(res=> {
       if(res.isSuccess) {
         navigate(ROUTE.USERS)
-      } else {
-        if(res.statusCode=404) navigate(ROUTE.ONBOARDING);
       }
     })
   },[]);

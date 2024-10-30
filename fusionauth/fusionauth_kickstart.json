@@ -1,0 +1,153 @@
+{
+    "variables": {
+        "adminEmail": "#{ENV.ADMIN_EMAIL}",
+        "adminPassword": "#{ENV.ADMIN_PASSWORD}",
+        "apiKey": "#{ENV.FA_API_KEY}",
+        "applicationId": "#{ENV.FA_APP_ID}",
+        "adminId": "#{ENV.FA_ADMIN_ID}",
+        "webhookUrl": "#{ENV.WEBHOOK_URL}",
+        "defaultTenantId" : "#{ENV.TENANT_ID}",
+        "lambdaId": "#{ENV.LAMBDA_ID}"
+    },
+    "apiKeys": [
+        {
+            "key": "#{apiKey}",
+            "description": "API Key for production"
+        }
+    ],
+    "requests": [
+        {
+            "method": "POST",
+            "url": "/api/system/reindex",
+            "body": {
+                "index": "fusionauth_user"
+            }
+        },
+        {
+            "method": "POST",
+            "url": "/api/lambda/#{lambdaId}",
+            "body": {
+                "lambda": {
+                    "body": "@{custom_files/jwt_populate.txt}",
+                    "enabled": true,
+                    "debug": true,
+                    "name": "custom fields",
+                    "type": "JWTPopulate"
+                }
+            }
+        },
+        
+        
+        {
+            "method": "POST",
+            "url": "/api/application/#{applicationId}",
+            "body": {
+                "application": {
+                    "name": "prosodyapp",
+                    "active": true,
+                    "jwtConfiguration": {
+                        "enabled": true,
+                        "refreshTokenTimeToLiveInMinutes": 43200,
+                        "timeToLiveInSeconds": 86400,
+                        "refreshTokenExpirationPolicy": "SlidingWindow",
+                        "refreshTokenUsagePolicy": "Reusable"
+                    },
+                    "loginConfiguration": {
+                        "allowTokenRefresh": true,
+                        "generateRefreshTokens": true,
+                        "requireAuthentication": true
+                    },
+                    "lambdaConfiguration": {
+                        "accessTokenPopulateId": "#{lambdaId}",
+                        "idTokenPopulateId": "#{lambdaId}"
+                    },
+                    "registrationConfiguration": {
+                        "enabled": false
+                    },
+                    "verifyRegistration": false
+                }
+            }
+        },
+        {
+            "method": "PATCH",
+            "url": "/api/tenant/#{defaultTenantId}",
+            "body": {
+                "tenant": {
+                    "emailConfiguration": {
+                        "verifyEmail": false,
+                        "forgotPasswordEmailTemplateId": "64a83e5a-b239-4511-b0ac-2360aab32af3"
+                    },
+                    "jwtConfiguration": {
+                        "enabled": true,
+                        "timeToLiveInSeconds": 86400,
+                        "refreshTokenTimeToLiveInMinutes": 43200,
+                        "refreshTokenUsagePolicy": "Reusable",
+                        "refreshTokenExpirationPolicy": "SlidingWindow"
+                    },
+                    "passwordValidationRules": {
+                        "rememberPreviousPasswords": {
+                            "enabled": true,
+                            "count": 1
+                        }
+                    },
+                    "eventConfiguration": {
+                        "events": {
+                            "user.reactivate": {
+                                "enabled": true,
+                                "transactionType": "Any"
+                            },
+                            "user.registration.create": {
+                                "enabled": true,
+                                "transactionType": "Any"
+                            },
+                            "user.delete": {
+                                "enabled": true,
+                                "transactionType": "Any"
+                            },
+                            "user.deactivate": {
+                                "enabled": true,
+                                "transactionType": "Any"
+                            },
+                            "group.create.complete": {
+                                "enabled": true
+                            },
+                            "group.update.complete": {
+                                "enabled": true
+                            },
+                            "group.delete.complete": {
+                                "enabled": true
+                            },
+                            "group.member.add.complete": {
+                                "enabled": true
+                            },
+                            "group.member.remove.complete": {
+                                "enabled": true
+                            },
+                            "group.member.update.complete": {
+                                "enabled": true
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "method": "POST",
+            "url": "/api/user/registration/#{adminId}",
+            "body": {
+                "user": {
+                    "email": "#{adminEmail}",
+                    "firstName": "dolphinVC",
+                    "lastName": "admin",
+                    "password": "#{adminPassword}"
+                },
+                "registration": {
+                    "applicationId": "#{FA_APP_ID}",
+                    "roles": [
+                        "admin"
+                    ]
+                }
+            }
+        }
+    ]
+}

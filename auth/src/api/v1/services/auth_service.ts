@@ -1,6 +1,6 @@
 import config from '../../../config';
 import authClient from '../../../utils/AuthClient';
-import { RegisterUser } from '../models/auth_models';
+import { LoginUser, RegisterUser } from '../models/auth_models';
 import { ValidationError } from '../models/error_models';
 
 export async function signup(user:RegisterUser) {
@@ -12,6 +12,8 @@ export async function signup(user:RegisterUser) {
       user: {
         email: user.email,
         password: user.password,
+        firstName: user.firstName,
+        lastName: user.lastName
       },
     });
   
@@ -28,14 +30,16 @@ export async function signup(user:RegisterUser) {
   
 }
 
-export async function login(user:RegisterUser) {
+export async function login(user:LoginUser) {
   try {
     const regUser = await authClient.login({
+      applicationId: config.FA_APP_ID,
       loginId: user.email,
       password: user.password
     });
   
     return regUser.response;
+    
     
   } catch (error:any) {
     throw error;
@@ -44,5 +48,5 @@ export async function login(user:RegisterUser) {
 
 export default {
   signup,
-  login
+  login  
 };

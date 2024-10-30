@@ -17,12 +17,10 @@ function Signup() {
         const res = await signupReq({
             url: SIGNUP_URL,
             method: 'POST',
-            data: values
+            data: values,
         });
 
-        if(res.isSuccess) {
-            navigate(ROUTE.ONBOARDING);
-        }
+        
 
     }
     return (
@@ -49,6 +47,21 @@ function Signup() {
                 { required: true, message: 'Please input your email!' }]}
             >
             <Input  />
+            </Form.Item>
+
+            <Form.Item<SignupForm>
+                label="First Name"
+                name="firstName"
+                rules={[{ required: true, message: 'Please input your First Name!' }]}
+                >
+                <Input  />
+            </Form.Item>
+            <Form.Item<SignupForm>
+                label="Last Name"
+                name="lastName"
+                rules={[{ required: true, message: 'Please input your Last Name!' }]}
+                >
+                <Input />
             </Form.Item>
             
 
