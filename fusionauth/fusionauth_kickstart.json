@@ -3,9 +3,8 @@
         "adminEmail": "#{ENV.ADMIN_EMAIL}",
         "adminPassword": "#{ENV.ADMIN_PASSWORD}",
         "apiKey": "#{ENV.FA_API_KEY}",
-        "applicationId": "#{ENV.FA_APP_ID}",
+        "applicationId": "#{ENV.FUSIONAUTH_APPLICATION_ID}",
         "adminId": "#{ENV.FA_ADMIN_ID}",
-        "webhookUrl": "#{ENV.WEBHOOK_URL}",
         "defaultTenantId" : "#{ENV.TENANT_ID}",
         "lambdaId": "#{ENV.LAMBDA_ID}"
     },
@@ -16,13 +15,6 @@
         }
     ],
     "requests": [
-        {
-            "method": "POST",
-            "url": "/api/system/reindex",
-            "body": {
-                "index": "fusionauth_user"
-            }
-        },
         {
             "method": "POST",
             "url": "/api/lambda/#{lambdaId}",
@@ -64,18 +56,25 @@
                     "registrationConfiguration": {
                         "enabled": false
                     },
+                    "roles": [
+                        {
+                            "name": "admin"
+                        },
+                        {
+                            "name": "user"
+                        }
+                    ],
                     "verifyRegistration": false
                 }
             }
         },
         {
             "method": "PATCH",
-            "url": "/api/tenant/#{defaultTenantId}",
+            "url": "/api/tenant/#{FUSIONAUTH_TENANT_ID}",
             "body": {
                 "tenant": {
                     "emailConfiguration": {
-                        "verifyEmail": false,
-                        "forgotPasswordEmailTemplateId": "64a83e5a-b239-4511-b0ac-2360aab32af3"
+                        "verifyEmail": false
                     },
                     "jwtConfiguration": {
                         "enabled": true,
@@ -142,7 +141,7 @@
                     "password": "#{adminPassword}"
                 },
                 "registration": {
-                    "applicationId": "#{FA_APP_ID}",
+                    "applicationId": "#{FUSIONAUTH_APPLICATION_ID}",
                     "roles": [
                         "admin"
                     ]

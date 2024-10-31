@@ -12,12 +12,18 @@ services:
       - "./mysql/init.sql:/docker-entrypoint-initdb.d/01.sql"
       - mysql-data:/var/lib/mysql
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "mysql -uroot -ppassword -e 'select * from mysql.user' || exit 1" ]
+      interval: 10s
+      timeout: 25s
+      retries: 5
   fusionauth:
     container_name: fusionauth-service
     build:
       context: ./fusionauth
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     environment:
       DATABASE_URL: jdbc:mysql://${DB_HOST}:${DB_PORT}/fusionauth?user=${DB_USERNAME}&password=${DB_PASSWORD}&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       DATABASE_ROOT_USERNAME: ${DB_USERNAME}
