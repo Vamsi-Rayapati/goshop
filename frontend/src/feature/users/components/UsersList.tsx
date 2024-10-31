@@ -59,7 +59,7 @@ function UsersList({users,loading,onDelete,onEdit}: Props) {
   ];
 
   return (
-      <Table loading={loading} columns={columns} dataSource={users} />
+      <Table loading={loading} columns={columns} dataSource={users} rowKey="id"  />
   )
 }
 

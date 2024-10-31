@@ -22,7 +22,7 @@ export function parseJWT() {
   const payload = JSON.parse(jsonPayload);
   return {
     email: payload.email,
-    id: payload.userId
+    id: payload.sub
   };
     
 }

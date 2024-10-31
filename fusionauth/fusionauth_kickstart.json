@@ -2,9 +2,9 @@
     "variables": {
         "adminEmail": "#{ENV.ADMIN_EMAIL}",
         "adminPassword": "#{ENV.ADMIN_PASSWORD}",
-        "apiKey": "#{ENV.FA_API_KEY}",
+        "apiKey": "#{ENV.FUSIONAUTH_API_KEY}",
         "applicationId": "#{ENV.FUSIONAUTH_APPLICATION_ID}",
-        "adminId": "#{ENV.FA_ADMIN_ID}",
+        "adminId": "#{ENV.FUSIONAUTH_ADMIN_ID}",
         "defaultTenantId" : "#{ENV.TENANT_ID}",
         "lambdaId": "#{ENV.LAMBDA_ID}"
     },

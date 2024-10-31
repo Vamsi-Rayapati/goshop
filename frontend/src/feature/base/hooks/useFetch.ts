@@ -41,6 +41,7 @@ function useFetch<T>(): [IResponse<T>, (config: AxiosRequestConfig)=> Promise<IR
                 isSuccess: true,
                 isLoading: false
             }
+            console.log(newResponse);
             setResponse(newResponse);
             return newResponse;
         } catch(error:any) {
@@ -52,7 +53,8 @@ function useFetch<T>(): [IResponse<T>, (config: AxiosRequestConfig)=> Promise<IR
                 message: data.message,
                 statusCode: error.status,
                 isFailed: true,
-                isLoading: false
+                isLoading: false,
+                isSuccess: false
             }
             setResponse(newResponse);
             return newResponse;

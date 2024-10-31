@@ -1,3 +1,4 @@
+import axios from 'axios';
 import config from '../../../config';
 import authClient from '../../../utils/AuthClient';
 import { LoginUser, RegisterUser } from '../models/auth_models';
@@ -16,6 +17,18 @@ export async function signup(user:RegisterUser) {
         lastName: user.lastName
       },
     });
+
+    await axios.request({
+      url: `${config.ACCOUNT_SERVICE_URL}/account/api/v1/internal/users`,
+      method: 'POST',
+      data: {
+        id: regUser.response.user?.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: 'user'
+      },
+    })
   
     return regUser.response;
     

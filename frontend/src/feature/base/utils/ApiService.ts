@@ -32,6 +32,7 @@ class ApiService  {
   private responseInterceptor(response: AxiosResponse): AxiosResponse {
       if(response.config.url?.includes("/auth/api/v1")) {
          localStorage.setItem('token', response.data.token)
+         localStorage.setItem('refreshToken', response.data.refreshToken)
       }
       return response;
   }

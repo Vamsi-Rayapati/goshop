@@ -13,6 +13,7 @@ interface Config extends NodeJS.ProcessEnv {
   FA_URL: string;
   FA_API_KEY: string;
   FA_APP_ID: string;
+  ACCOUNT_SERVICE_URL: string;
 }
 
 const config = process.env as Config;

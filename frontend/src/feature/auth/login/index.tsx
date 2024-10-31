@@ -19,9 +19,9 @@ function Login() {
             data: values
         });
 
-        // if(res.isSuccess) {
-        //     navigate(ROUTE.CONSOLE);
-        // }
+        if(res.isSuccess) {
+            navigate(ROUTE.CONSOLE);
+        }
 
     }
     return (

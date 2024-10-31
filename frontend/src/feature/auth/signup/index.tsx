@@ -20,7 +20,9 @@ function Signup() {
             data: values,
         });
 
-        
+        if(res.isSuccess) {
+            navigate(ROUTE.CONSOLE);
+        }
 
     }
     return (
