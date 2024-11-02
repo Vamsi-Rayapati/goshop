@@ -8,9 +8,9 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3306:3306"
+    restart: unless-stopped
     volumes:
       - mysql-data:/var/lib/mysql
-    restart: unless-stopped
     healthcheck:
       test: [ "CMD-SHELL", "mysql -uroot -ppassword -e 'select * from mysql.user' || exit 1" ]
       interval: 10s
@@ -29,47 +29,39 @@ services:
       DATABASE_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
       - 9011:9011
-    # volumes:
-    #   - fusionauth_config:/usr/local/fusionauth/config
     restart: unless-stopped
   
   auth:
     container_name: auth-service
     build:
       context: ./auth
-      target: dev
+      target: prod
     ports:
       - "4002:4002"
     depends_on:
       mysql:
         condition: service_healthy
-    volumes:
-      - ./auth/src:/app/src
     restart: unless-stopped
 
   account:
     container_name: account-service
     build:
       context: ./account
-      target: dev
+      target: prod
     ports:
       - "4001:4001"
     depends_on:
       mysql:
         condition: service_healthy
-    volumes:
-      - ./account/src:/app/src
     restart: unless-stopped
 
   frontend:
     container_name: frontend-service
     build:
       context: ./frontend
-      target: dev
+      target: prod
     ports:
       - "5000:5000"
-    volumes:
-      - ./frontend/src:/app/src
     restart: unless-stopped
   ingress-nginx:
     container_name: ingress-nginx-service

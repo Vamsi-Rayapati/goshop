@@ -1,20 +1,29 @@
-# Stage 1: Copy code and install dependencies
+# Use the official Node.js image from the Docker Hub as the base image
 FROM node:22-alpine3.19 AS base
+
+# Set the working directory inside the container
 WORKDIR /app
+
+# Copy the package.json and package-lock.json (if available)
+COPY package*.json ./
+
+# Install the dependencies
+RUN npm install
+
+# Copy the rest of the application code
 COPY . .
-RUN npm ci
-
-# Stage 2 Build Phase
-FROM base AS build
-RUN npm run build
 
 
-# Stage 3 Dev Phase
+# --- Development Stage ---
 FROM base AS dev
 EXPOSE 5000
 CMD ["sh", "-c", "npm start"]
 
-# Stage 4 Serve Phase
+# --- Production Build Stage ---
+FROM base AS build
+RUN npm run build
+
+# --- Production Build Stage ---
 FROM node:22-alpine3.19 AS prod
 WORKDIR /app
 COPY --from=build /app/build ./build

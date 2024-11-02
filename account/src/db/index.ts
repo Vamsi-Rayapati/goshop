@@ -6,6 +6,7 @@ const sequelize = new Sequelize('account', config.DB_USER_NAME, config.DB_PASSWO
   host: config.DB_HOST,
   port: parseInt(config.DB_PORT),
   dialect: 'mysql',
+  dialectModule: require('mysql2'),
 });
 
 export default sequelize;
