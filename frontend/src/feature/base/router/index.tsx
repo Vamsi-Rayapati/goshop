@@ -2,16 +2,15 @@ import Orders from "feature/orders";
 import Users from "feature/users";
 import MainLayout from "feature/base/layout";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import AuthLayout from "feature/auth";
 import Login from "feature/auth/login";
 import Signup from "feature/auth/signup";
 import { ROUTE } from "./constants";
-
+import Products from "feature/products/components/Products";
 
 const router = createBrowserRouter([
     {
       path: '/',
-      element:  <Navigate to={localStorage.getItem('token') ? ROUTE.CONSOLE:ROUTE.LOGIN}/> 
+      element:  <Navigate to={localStorage.getItem('token') ? '/console' : ROUTE.LOGIN}/> 
     },
     {
       path: ROUTE.CONSOLE,
@@ -28,6 +27,10 @@ const router = createBrowserRouter([
         {
           path: ROUTE.ORDERS,
           element: <Orders/>
+        },
+        {
+          path: ROUTE.PRODUCTS,
+          element: <Products/>
         }
       ]
     },

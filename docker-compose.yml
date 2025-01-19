@@ -60,6 +60,20 @@ services:
     volumes:
       - ./account/src:/app/src
     restart: unless-stopped
+  
+  shopping:
+    container_name: shopping-service
+    build:
+      context: ./shopping
+      target: dev
+    ports:
+      - "4003:4003"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./shopping/src:/app/src
+    restart: unless-stopped
 
   frontend:
     container_name: frontend-service
@@ -82,6 +96,7 @@ services:
       - account
       - frontend
       - auth
+      - shopping
     restart: unless-stopped
 
 volumes:

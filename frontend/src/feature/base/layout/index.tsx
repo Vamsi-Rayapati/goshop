@@ -1,58 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { useEffect, useState } from 'react';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, Spin, theme } from 'antd';
-import { Outlet, useNavigate, useNavigation } from 'react-router-dom';
+import { Layout, Menu, Spin, theme } from 'antd';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { ROUTE } from '../router/constants';
 import AppHeader from './Header';
 import useFetch from '../hooks/useFetch';
 import { User } from 'feature/users/types';
 import { USERS_API } from 'feature/users/constants';
 import { parseJWT } from 'feature/auth/functions';
+import { items } from './constants';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 
-type MenuItem = Required<MenuProps>['items'][number];
 
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
-}
 
-const items: MenuItem[] = [
-  {
-    label: 'Profile',
-    key: ROUTE.PROFILE,
-    icon:  <UserOutlined />
-  },
-  {
-    label: 'Users',
-    key: ROUTE.USERS,
-    icon: <TeamOutlined/>
-  },
-  {
-    label: 'Orders',
-    key: ROUTE.ORDERS,
-    icon: <PieChartOutlined />
-  }
-];
-
-const MainLayout: React.FC = (props) => {
+function MainLayout ()  {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -68,9 +30,9 @@ const MainLayout: React.FC = (props) => {
       method: 'GET',
     })
     .then(res=> {
-      if(res.isSuccess) {
-        navigate(ROUTE.USERS)
-      }
+      // if(res.isSuccess) {
+      //   navigate(ROUTE.USERS)
+      // }
     })
   },[]);
 
@@ -99,7 +61,7 @@ const MainLayout: React.FC = (props) => {
         <Menu theme="dark" defaultSelectedKeys={['1']} onClick={onClick} mode="inline" items={items} />
       </Sider>
       <Layout>
-       <AppHeader/>
+       <AppHeader user={getUserRes.data}/>
         <Content style={{ margin: '0 16px' }}>
           <Outlet/>
         </Content>

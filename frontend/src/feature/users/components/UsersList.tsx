@@ -1,8 +1,5 @@
-import { Button, Space, Table, TableProps, Tag } from 'antd';
+import { Table, TableProps, Tag } from 'antd';
 import { User, Role } from '../types';
-import { useEffect } from 'react';
-import useFetch from 'feature/base/hooks/useFetch';
-import { USERS_API } from '../constants';
 import moment from 'moment';
 import UsersListActions from './UsersListActions';
 

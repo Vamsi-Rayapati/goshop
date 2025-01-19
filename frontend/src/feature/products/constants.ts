@@ -1,0 +1,1 @@
+export const PRODUCTS_API = '/shopping/api/v1/products';

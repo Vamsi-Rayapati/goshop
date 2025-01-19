@@ -1,15 +1,29 @@
-import { Avatar, Button, theme } from 'antd';
+import { Avatar, Button, Card, Popover, theme } from 'antd';
 import { Header } from 'antd/es/layout/layout';
 import { handleLogout } from 'feature/auth/functions';
+import { User } from 'feature/users/types';
 import React from 'react'
 
-function AppHeader() {
+interface IProps {
+    user: User
+}
+
+function AppHeader({user}: IProps) {
     const {
         token: { colorBgContainer, borderRadiusLG },
       } = theme.useToken();
     return (
-        <Header style={{ padding: 0, background: colorBgContainer, display: 'flex', justifyContent: 'flex-end' }}>
+        <Header style={{ paddingRight: 5, background: colorBgContainer, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+           
+           <Popover content={
             <Button onClick={handleLogout}>Logout</Button>
+            }>
+           {user.firstName && <Avatar style={{ backgroundColor: '#f56a00', cursor:'pointer' }} size={'large'}>{user.firstName[0]}</Avatar>}
+           </Popover>
+                
+
+            
+            {/*  */}
         </Header>
     )
 }
