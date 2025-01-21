@@ -12,14 +12,14 @@ module.exports = {
         loader: 'ts-loader',
         exclude: /node_modules/,
         options: {
-            configFile: 'tsconfig.json'
+          configFile: 'tsconfig.json',
         },
       },
     ],
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
-    // fallback: { 
+    // fallback: {
     //     'path': require.resolve('path-browserify'),
     //     "url": require.resolve("url/"),
     //     "assert": require.resolve("assert/"),

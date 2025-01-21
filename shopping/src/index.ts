@@ -5,6 +5,7 @@ import config from './config';
 import sequelize from './db';
 import errorHandler from './middlewares/error-handler';
 import mainRouter from './api';
+import formParser from './middlewares/form-parser';
 
 // Config Express
 const app = express();
@@ -13,6 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(logger);
 app.use(cookieParser());
+app.use(formParser);
 
 // route handlers
 app.use('/shopping/api/v1', mainRouter);

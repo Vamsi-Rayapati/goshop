@@ -28,7 +28,7 @@ Product.init(
       defaultValue: DataTypes.UUIDV4,
     },
     name: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     description: {
@@ -48,7 +48,7 @@ Product.init(
       allowNull: false,
     },
     images: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
+      type: DataTypes.STRING,
       allowNull: true,
     },
   },

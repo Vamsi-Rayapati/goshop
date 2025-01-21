@@ -3,6 +3,7 @@ import service from './service';
 import validate from '../base/validation/validate';
 import { Product } from './models';
 import gaurd from '../base/error/gaurd';
+import UploadClient from '../base/aws/UploadClient';
 
 async function getProducts(req: Request, res: Response): Promise<void> {
   const products = await service.getProducts();
@@ -34,10 +35,28 @@ async function deleteProduct(req: Request, res: Response): Promise<void> {
   res.json(product);
 }
 
+async function uploadImage(req: Request, res: Response): Promise<void> {
+  const { file } = req;
+  if (!file) {
+    throw new Error('No file provided');
+  }
+  const upload = new UploadClient({
+    Bucket: 'micro-shopping-bucket',
+    Key: `images/${file?.originalname}`,
+    ACL: 'public-read',
+    file,
+  });
+
+  const uploadRes = await upload.done();
+
+  res.status(200);
+}
+
 export default {
   getProducts: gaurd(getProducts),
   getProduct: gaurd(getProduct),
   addProduct: gaurd(addProduct),
   updateProduct: gaurd(updateProduct),
   deleteProduct: gaurd(deleteProduct),
+  uploadImage: gaurd(uploadImage),
 };

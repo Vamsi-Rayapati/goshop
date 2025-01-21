@@ -8,6 +8,8 @@ interface Config extends NodeJS.ProcessEnv {
   DB_PORT:string
   DB_USER_NAME:string
   DB_PASSWORD:string
+  AWS_ACCESS_KEY_ID: string
+  AWS_SECRET_ACCESS_KEY: string
 }
 
 const config = process.env as Config;

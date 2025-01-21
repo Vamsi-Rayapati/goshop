@@ -1,5 +1,6 @@
-import { Form, Input, InputNumber, Modal, Spin } from 'antd'
+import { Form, Input, InputNumber, Modal, Spin, Upload, UploadFile, UploadProps } from 'antd'
 import React, { useEffect, useState } from 'react'
+import { PlusOutlined } from '@ant-design/icons';
 import { IProduct } from '../types';
 import useFetch from 'feature/base/hooks/useFetch';
 import { PRODUCTS_API } from '../constants';
@@ -17,7 +18,12 @@ function ProductForm({onClose,onSubmit,loading, productId}:Props) {
     const title = productId ? 'Edit Product' : 'Add Product';
     const [changedFields, setChangedFields] = useState<Partial<IProduct>>({});
     const [getProductRes, getProductReq] = useFetch<IProduct>();
+    const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [form] = Form.useForm();
+
+
+    const onUploadChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
+        setFileList(newFileList); 
 
     const onValuesChange = (changedValues: Partial<IProduct>) => {
         setChangedFields((prev) => ({
@@ -100,6 +106,23 @@ function ProductForm({onClose,onSubmit,loading, productId}:Props) {
                     rules={[{ required: true }]}
                     >
                     <InputNumber />
+                </Form.Item>
+
+                <Form.Item<IProduct>
+                    label="Images"
+                    name={'images'}
+                    rules={[{ required: true }]}
+                    >
+                    <Upload
+                        action={`${PRODUCTS_API}/upload`}
+                        listType="picture-card"
+                        fileList={fileList}
+                        onChange={onUploadChange}>
+                        <button style={{ border: 0, background: 'none' }} type="button">
+                        <PlusOutlined />
+                        <div style={{ marginTop: 8 }}>Upload</div>
+                        </button>
+                    </Upload>
                 </Form.Item>
 
             </Form>
