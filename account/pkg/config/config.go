@@ -1,8 +1,15 @@
 package config
 
 import (
+	"fmt"
+	"log"
+
 	"github.com/spf13/viper"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
+
+var DB *gorm.DB
 
 type ApplicationConfig struct {
 	Port       int
@@ -29,4 +36,24 @@ func LoadConfig() *ApplicationConfig {
 
 	return Config
 
+}
+
+// ConnectDB initializes the database connection
+func ConnectDB() error {
+	var err error
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		Config.DbUserName,
+		Config.DbPassword,
+		Config.DbHost,
+		Config.DbPort,
+		"account", // DB name
+	)
+
+	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+		return err
+	}
+	log.Println("Database connection successful!")
+	return nil
 }
