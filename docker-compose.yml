@@ -44,7 +44,7 @@ services:
       mysql:
         condition: service_healthy
     volumes:
-      - ./auth/src:/app/src
+      - ./auth:/app
     restart: unless-stopped
 
   account:

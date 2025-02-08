@@ -44,6 +44,6 @@ export default {
   postUser: gaurd(postUser),
   patchUser: gaurd(patchUser),
   deleteUser: gaurd(deleteUser),
-  internalPostUser: gaurd(internalPostUser)
-  
+  internalPostUser: gaurd(internalPostUser),
+
 };

@@ -50,21 +50,6 @@ function Signup() {
             >
             <Input  />
             </Form.Item>
-
-            <Form.Item<SignupForm>
-                label="First Name"
-                name="firstName"
-                rules={[{ required: true, message: 'Please input your First Name!' }]}
-                >
-                <Input  />
-            </Form.Item>
-            <Form.Item<SignupForm>
-                label="Last Name"
-                name="lastName"
-                rules={[{ required: true, message: 'Please input your Last Name!' }]}
-                >
-                <Input />
-            </Form.Item>
             
 
             <Form.Item<SignupForm>
