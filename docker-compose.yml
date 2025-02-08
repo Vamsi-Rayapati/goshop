@@ -58,7 +58,7 @@ services:
       mysql:
         condition: service_healthy
     volumes:
-      - ./account/src:/app/src
+      - ./account:/app
     restart: unless-stopped
   
   shopping:

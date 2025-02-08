@@ -1,31 +1,17 @@
-# Use the official Node.js image from the Docker Hub as the base image
-FROM node:22-alpine3.19 AS base
+FROM golang:1.23 AS base
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the package.json and package-lock.json (if available)
-COPY package*.json ./
+COPY go.* ./
 
-# Install the dependencies
-RUN npm install
+RUN go mod download
 
-# Copy the rest of the application code
 COPY . .
 
-# --- Development Stage ---
+EXPOSE 4001
+
 FROM base AS dev
-EXPOSE 4001
-CMD npm run dev
+RUN go install github.com/air-verse/air@latest
+CMD ["air", "-c", ".air.toml"]
 
-# --- Production Build Stage ---
-FROM base AS build
-RUN npm run build
-
-# --- Production Build Stage ---
-FROM node:22-alpine3.19 AS prod
-WORKDIR /app
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/.env .env
-EXPOSE 4001
-CMD ["node", "dist/index.js"]
