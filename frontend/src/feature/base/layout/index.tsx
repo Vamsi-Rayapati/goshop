@@ -30,6 +30,9 @@ function MainLayout ()  {
       method: 'GET',
     })
     .then(res=> {
+      if(res.statusCode === 404) {
+        navigate(ROUTE.ONBOARD)
+      }
       // if(res.isSuccess) {
       //   navigate(ROUTE.USERS)
       // }

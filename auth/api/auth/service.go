@@ -17,6 +17,7 @@ func (service AuthService) Signup(user *SignupRequest) (*SignupResponse, *models
 
 	request := fusionauth.RegistrationRequest{
 		Registration: fusionauth.UserRegistration{
+			Roles:         []string{"user"},
 			ApplicationId: config.Config.FaAppId,
 		},
 		User: fusionauth.User{

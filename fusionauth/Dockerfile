@@ -5,7 +5,7 @@ COPY --chown=fusionauth:fusionauth fusionauth_kickstart.json /usr/local/fusionau
 
 COPY --chown=fusionauth:fusionauth custom_files /usr/local/fusionauth/custom_files
 
-ENV ADMIN_EMAIL=admin@micro.com
+ENV ADMIN_EMAIL=superadmin@goshop.com
 ENV ADMIN_PASSWORD=password
 ENV FUSIONAUTH_ADMIN_ID=786ae7a3-5072-417e-9c23-963b84a5c95f
 

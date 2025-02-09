@@ -35,7 +35,7 @@
             "url": "/api/application/#{applicationId}",
             "body": {
                 "application": {
-                    "name": "prosodyapp",
+                    "name": "GoShop",
                     "active": true,
                     "jwtConfiguration": {
                         "enabled": true,
@@ -62,6 +62,9 @@
                         },
                         {
                             "name": "user"
+                        },
+                        {
+                            "name": "supervisor"
                         }
                     ],
                     "verifyRegistration": false
@@ -136,8 +139,8 @@
             "body": {
                 "user": {
                     "email": "#{adminEmail}",
-                    "firstName": "dolphinVC",
-                    "lastName": "admin",
+                    "firstName": "Admin",
+                    "lastName": "Go Shop",
                     "password": "#{adminPassword}"
                 },
                 "registration": {

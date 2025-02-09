@@ -7,9 +7,10 @@ function populate(jwt, user, registration) {
   //  To dump an entire object to the EventLog you can use JSON.stringify, for example: 
   //  console.info(JSON.stringify(user)); 
 
+  jwt.username = user.email;
   // Happy coding! Populate your JWT here.
-  jwt.lastName = user.lastName;
-  jwt.firstName = user.firstName;
+  // jwt.lastName = user.lastName;
+  // jwt.firstName = user.firstName;
   // jwt.mobilePhone = user.mobilePhone;
   // jwt.tenant_role = user.data.tenant_role;
   // jwt.identityProviderUserId = user.data.identityProviderUserId;

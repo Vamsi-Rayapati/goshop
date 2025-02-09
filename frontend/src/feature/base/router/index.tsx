@@ -6,6 +6,7 @@ import Login from "feature/auth/login";
 import Signup from "feature/auth/signup";
 import { ROUTE } from "./constants";
 import Products from "feature/products/components/Products";
+import Onboard from "feature/onboard";
 
 const router = createBrowserRouter([
     {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
     },
     { path: ROUTE.LOGIN, element: <Login/>},
     { path: ROUTE.SIGNUP, element: <Signup/>},
+    {
+      path: ROUTE.ONBOARD,
+      element: <Onboard/>
+    },
     
 ]);
 
