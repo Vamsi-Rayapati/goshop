@@ -6,15 +6,24 @@ import (
 	"log"
 
 	"github.com/smartbot/account/api"
-	"github.com/smartbot/account/models"
+	"github.com/smartbot/account/database"
 	"github.com/smartbot/account/pkg/config"
+	"github.com/smartbot/account/pkg/dbclient"
 )
 
 func main() {
+	var err error
 	config.LoadConfig()
 
-	config.ConnectDB()
-	err := config.DB.AutoMigrate(&models.User{})
+	// config.ConnectDB()
+	db, err := dbclient.Connect()
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+		return
+	}
+
+	err = db.AutoMigrate(&database.User{})
+
 	if err != nil {
 		log.Fatalf("Migration failed: %v", err)
 	}
