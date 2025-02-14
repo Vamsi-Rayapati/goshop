@@ -13,6 +13,8 @@ type UserController struct {
 }
 
 func (uc UserController) OnboardUser(c *gin.Context) {
+
+	log.Print("under onboard.......")
 	var onboardRequest OnboardRequest
 	err := validator.ValidateBody(c, &onboardRequest)
 

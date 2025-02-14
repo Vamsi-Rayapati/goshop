@@ -14,6 +14,7 @@ type AuthService struct {
 
 func (service AuthService) Signup(user *SignupRequest) (*SignupResponse, *models.ApiError) {
 	var client = fusionauthclient.NewClient()
+	// client.ValidateJWT()
 
 	request := fusionauth.RegistrationRequest{
 		Registration: fusionauth.UserRegistration{

@@ -17,6 +17,7 @@ type ApplicationConfig struct {
 	DbPort     int
 	DbUserName string
 	DbPassword string
+	FaSecret   string
 }
 
 var Config *ApplicationConfig
@@ -32,6 +33,7 @@ func LoadConfig() *ApplicationConfig {
 		DbPort:     viper.GetInt("DB_PORT"),
 		DbUserName: viper.GetString("DB_USER_NAME"),
 		DbPassword: viper.GetString("DB_PASSWORD"),
+		FaSecret:   viper.GetString("FA_SECRET"),
 	}
 
 	return Config

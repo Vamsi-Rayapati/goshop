@@ -6,5 +6,5 @@ func RegisterRoutes(route *gin.RouterGroup) {
 	userService := UserService{}
 	userController := UserController{service: userService}
 
-	route.POST("/user/onboard", userController.OnboardUser)
+	route.POST("/onboard", userController.OnboardUser)
 }
