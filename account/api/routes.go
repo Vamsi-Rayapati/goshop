@@ -11,7 +11,7 @@ func RegisterRoutes() *gin.Engine {
 	accountGroup := router.Group("/account/api/v1")
 
 	// authenticated routes
-	accountGroup.Use(middleware.JWTMiddleWare())
+	accountGroup.Use(middleware.Authenticate())
 	{
 		user.RegisterRoutes(accountGroup)
 	}

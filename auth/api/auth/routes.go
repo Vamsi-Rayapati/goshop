@@ -10,4 +10,6 @@ func RegisterRoutes(route *gin.RouterGroup) {
 
 	route.POST("/signup", authController.Signup)
 	route.POST("/login", authController.Login)
+	route.POST("/token/refresh", authController.RefreshToken)
+	route.GET("/jwks", authController.GetJWKS)
 }

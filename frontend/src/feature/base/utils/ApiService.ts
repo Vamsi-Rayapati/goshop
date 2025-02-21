@@ -42,27 +42,30 @@ class ApiService  {
    const originalRequest = error.config as InternalAxiosRequestConfig;
 
 
-   // if (error?.response?.status === 401 && !originalRequest?._retry) {
-   //     console.log('Request Failed', 'Unauthorised');
-   //     originalRequest._retry = true;
 
-   //     const newToken: string = await MeetingModule.getNewToken();
 
-   //     if (newToken) {
+   if (error?.response?.status === 401) {
+       console.log('Request Failed', 'Unauthorised');
+      //  originalRequest._retry = true;
 
-   //         const tokenType = await MeetingModule.getTokenType();
+       const resp = await apiService.request({
+         url: '/auth/api/v1/token/refresh',
+         method: 'POST',
+         data: {
+            refresh_token: localStorage.getItem('refreshToken'),
+            token: localStorage.getItem('token')
+         }
+       })
 
-   //         if (tokenType === 'sdk') {
-   //             originalRequest.headers['X-DVC-Tenant-SDK-Key'] = newToken;
-   //         } else {
-   //             originalRequest.headers.Authorization = `Bearer ${newToken}`;
-   //         }
+       if (resp.status === 200) {
+         originalRequest.headers.Authorization = `Bearer ${resp.data.token}`;
+           
 
-   //         console.log('Retrying Request ......');
+           console.log('Retrying Request ......');
 
-   //         return this.instance.request(originalRequest);
-   //     }
-   // }
+           return this.instance.request(originalRequest);
+       }
+   }
 
    return Promise.reject(error);
 }

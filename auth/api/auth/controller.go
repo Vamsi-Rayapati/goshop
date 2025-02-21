@@ -38,6 +38,7 @@ func (ac AuthController) Login(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
+		return
 	}
 
 	res, loginErr := ac.service.Login(&user)
@@ -49,4 +50,31 @@ func (ac AuthController) Login(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, res)
 
+}
+
+func (ac AuthController) RefreshToken(c *gin.Context) {
+	var authInfo RefreshRequest
+	err := validator.ValidateBody(c, &authInfo)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	res, refreshTokenErr := ac.service.RefreshToken(authInfo)
+	if refreshTokenErr != nil {
+		c.JSON(refreshTokenErr.Code, refreshTokenErr)
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}
+
+func (ac AuthController) GetJWKS(c *gin.Context) {
+	jwks, jwksErr := ac.service.FetchJWKS()
+
+	if jwksErr != nil {
+		c.JSON(jwksErr.Code, jwksErr)
+		return
+	}
+
+	c.JSON(http.StatusOK, jwks)
 }

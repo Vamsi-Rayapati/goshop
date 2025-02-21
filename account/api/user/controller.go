@@ -34,3 +34,19 @@ func (uc UserController) OnboardUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, response)
 
 }
+
+func (uc UserController) GetUser(c *gin.Context) {
+
+	value, _ := c.Get("user_id")
+
+	log.Print("Heyyyy")
+
+	res, err := uc.service.GetUser(value.(string))
+
+	if err != nil {
+		log.Printf("ERRR %+v", err)
+		c.JSON(err.Code, err)
+		return
+	}
+	c.JSON(http.StatusOK, res)
+}

@@ -1,6 +1,9 @@
 package auth
 
 import (
+	"encoding/json"
+	"io"
+	"log"
 	"net/http"
 
 	"github.com/FusionAuth/go-client/pkg/fusionauth"
@@ -97,4 +100,63 @@ func (service AuthService) Login(user *LoginRequest) (*LoginResponse, *models.Ap
 		Token:        res.Token,
 		RefreshToken: res.RefreshToken,
 	}, nil
+}
+
+func (service AuthService) RefreshToken(authInfo RefreshRequest) (*RefreshResponse, *models.ApiError) {
+	var client = fusionauthclient.NewClient()
+	resp, faErrs, err := client.ExchangeRefreshTokenForJWT(fusionauth.RefreshRequest{
+		RefreshToken: authInfo.RefreshToken,
+		Token:        authInfo.Token,
+	})
+
+	if faErrs != nil || err != nil {
+		log.Printf("Err %+v", faErrs)
+		return nil, &models.ApiError{
+			Code:    http.StatusInternalServerError,
+			Message: "Failed to refresh token",
+		}
+	}
+
+	return &RefreshResponse{
+		RefreshToken: resp.RefreshToken,
+		Token:        resp.Token,
+	}, nil
+
+}
+
+func (service AuthService) FetchJWKS() (*JWKS, *models.ApiError) {
+	resp, err := http.Get(config.Config.FaUrl + "/.well-known/jwks.json")
+	if err != nil {
+		return nil, &models.ApiError{
+			Code:    http.StatusInternalServerError,
+			Message: "Failed to fetch JWKS",
+		}
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, &models.ApiError{
+			Code:    http.StatusInternalServerError,
+			Message: "Failed to fetch JWKS",
+		}
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, &models.ApiError{
+			Code:    http.StatusInternalServerError,
+			Message: "Failed to parse JWKS",
+		}
+	}
+
+	var jwks JWKS
+	err = json.Unmarshal(body, &jwks)
+	if err != nil {
+		return nil, &models.ApiError{
+			Code:    http.StatusInternalServerError,
+			Message: "Failed to parse JWKS",
+		}
+	}
+
+	return &jwks, nil
 }
