@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/smartbot/account/database"
 	"github.com/smartbot/account/models"
 	"github.com/smartbot/account/pkg/dbclient"
@@ -43,11 +44,12 @@ func (us UserService) GetUser(id string) (*User, *models.ApiError) {
 	}, nil
 }
 
-func (us UserService) OnboardUser(user OnboardRequest) (*User, *models.ApiError) {
+func (us UserService) OnboardUser(userId string, userName string, user OnboardRequest) (*User, *models.ApiError) {
 	db := dbclient.GetCient()
+	userIdParsed, _ := uuid.Parse(userId)
 	newUser := database.User{
-		ID:        user.ID,
-		Username:  user.UserName,
+		ID:        userIdParsed,
+		Username:  userName,
 		Firstname: user.FirstName,
 		Lastname:  user.LastName,
 		Status:    database.Active,

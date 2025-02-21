@@ -46,6 +46,8 @@ func authenticationMiddleware(c *gin.Context) {
 
 	claims, _ := token.Claims.(jwt.MapClaims)
 	c.Set("user_id", claims["sub"])
+	c.Set("roles", claims["roles"])
+	c.Set("username", claims["username"])
 	c.Next()
 
 }

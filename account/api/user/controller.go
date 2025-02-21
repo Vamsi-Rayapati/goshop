@@ -23,9 +23,12 @@ func (uc UserController) OnboardUser(c *gin.Context) {
 		return
 	}
 
+	userId, _ := c.Get("user_id")
+	userName, _ := c.Get("username")
+
 	log.Println("onboard valid success")
 
-	response, onboardError := uc.service.OnboardUser(onboardRequest)
+	response, onboardError := uc.service.OnboardUser(userId.(string), userName.(string), onboardRequest)
 	if onboardError != nil {
 		c.JSON(onboardError.Code, onboardError)
 		return
@@ -39,12 +42,9 @@ func (uc UserController) GetUser(c *gin.Context) {
 
 	value, _ := c.Get("user_id")
 
-	log.Print("Heyyyy")
-
 	res, err := uc.service.GetUser(value.(string))
 
 	if err != nil {
-		log.Printf("ERRR %+v", err)
 		c.JSON(err.Code, err)
 		return
 	}

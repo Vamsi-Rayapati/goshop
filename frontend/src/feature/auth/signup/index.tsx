@@ -21,7 +21,7 @@ function Signup() {
         });
 
         if(res.isSuccess) {
-            navigate(ROUTE.CONSOLE);
+            navigate(ROUTE.ONBOARD);
         }
 
     }

@@ -1,1 +1,1 @@
-export const ONBOARD_URL = '/account/api/v1/onboard';
+export const ONBOARD_URL = '/account/api/v1/user/onboard';
