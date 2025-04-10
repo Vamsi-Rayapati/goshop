@@ -2,12 +2,11 @@ package user
 
 import (
 	"log"
-	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/smartbot/account/database"
-	"github.com/smartbot/account/models"
 	"github.com/smartbot/account/pkg/dbclient"
+	"github.com/smartbot/account/pkg/errors"
 	"github.com/smartbot/account/pkg/utils"
 	"gorm.io/gorm"
 )
@@ -15,7 +14,7 @@ import (
 type UserService struct {
 }
 
-func (us UserService) GetUser(id string) (*UserResponse, *models.ApiError) {
+func (us UserService) GetUser(id string) (*UserResponse, *errors.ApiError) {
 	db := dbclient.GetCient()
 	var user database.User
 	result := db.Where("id = ?", id).First(&user)
@@ -23,13 +22,10 @@ func (us UserService) GetUser(id string) (*UserResponse, *models.ApiError) {
 	if result.Error != nil {
 		log.Println("GetUser: %+v", result.Error)
 		if result.Error == gorm.ErrRecordNotFound {
-			return nil, &models.ApiError{
-				Message: "User not found",
-				Code:    http.StatusNotFound,
-			}
+			return nil, errors.NotFoundError("User not found")
 		}
 
-		return nil, &models.ApiError{Message: "Failed to get user", Code: http.StatusInternalServerError}
+		return nil, errors.InternalServerError("Failed to get user")
 	}
 
 	return &UserResponse{
@@ -45,7 +41,7 @@ func (us UserService) GetUser(id string) (*UserResponse, *models.ApiError) {
 	}, nil
 }
 
-func (us UserService) OnboardUser(userId string, userName string, user OnboardRequest) (*UserResponse, *models.ApiError) {
+func (us UserService) OnboardUser(userId string, userName string, user OnboardRequest) (*UserResponse, *errors.ApiError) {
 	db := dbclient.GetCient()
 	userIdParsed, _ := uuid.Parse(userId)
 	newUser := database.User{
@@ -59,7 +55,7 @@ func (us UserService) OnboardUser(userId string, userName string, user OnboardRe
 
 	if result.Error != nil {
 		log.Fatalf("OnboardUser: %+v", result.Error)
-		return nil, &models.ApiError{Message: "Failed to create user", Code: 500}
+		return nil, errors.InternalServerError("Failed to create user")
 	}
 
 	return &UserResponse{
@@ -76,7 +72,7 @@ func (us UserService) OnboardUser(userId string, userName string, user OnboardRe
 
 }
 
-func (us UserService) getUsers() (*UsersResponse, *models.ApiError) {
+func (us UserService) getUsers() (*UsersResponse, *errors.ApiError) {
 	db := dbclient.GetCient()
 	var users []database.User
 	var total int64
@@ -85,7 +81,7 @@ func (us UserService) getUsers() (*UsersResponse, *models.ApiError) {
 	result := db.Find(&users)
 
 	if result.Error != nil {
-		return nil, &models.ApiError{Message: "Failed to get users", Code: http.StatusInternalServerError}
+		return nil, errors.InternalServerError("Failed to get users")
 	}
 
 	userList := utils.Map(users, func(user database.User) UserResponse {

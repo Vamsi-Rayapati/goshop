@@ -1,22 +1,14 @@
 package validator
 
 import (
-	"errors"
+	error "errors"
 	"reflect"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
+	"github.com/smartbot/account/pkg/errors"
 )
-
-type FieldError struct {
-	Field   string `json:"field"`
-	Message string `json:"message"`
-}
-
-type ValidationError struct {
-	Errors  []FieldError `json:"errors,omitempty"`
-	Message string       `json:"message"`
-}
 
 func GetMessageByTag(tag string) string {
 	switch tag {
@@ -28,11 +20,18 @@ func GetMessageByTag(tag string) string {
 		return tag
 	}
 }
-func ValidateBody(c *gin.Context, obj any) *ValidationError {
+
+func ValidateUUID(id string) *errors.ApiError {
+	_, err := uuid.Parse(id)
+	if err != nil {
+		return errors.ValidationError("Invalid UUID, Please provide a valid UUID", []errors.FieldError{})
+	}
+
+	return nil
+}
+func ValidateBody(c *gin.Context, obj any) *errors.ApiError {
 	if err := c.ShouldBindJSON(obj); err != nil {
-		return &ValidationError{
-			Message: "Invalid request payload",
-		}
+		return errors.ValidationError("Invalid request payload", []errors.FieldError{})
 	}
 
 	var validate = validator.New()
@@ -43,21 +42,16 @@ func ValidateBody(c *gin.Context, obj any) *ValidationError {
 
 	if err := validate.Struct(obj); err != nil {
 		var ve validator.ValidationErrors
-		if errors.As(err, &ve) {
-			validationErrors := []FieldError{}
+		if error.As(err, &ve) {
+			validationErrors := []errors.FieldError{}
 
 			for _, e := range ve {
-				validationErrors = append(validationErrors, FieldError{Field: e.Field(), Message: GetMessageByTag(e.Tag())})
+				validationErrors = append(validationErrors, errors.FieldError{Field: e.Field(), Message: GetMessageByTag(e.Tag())})
 			}
 
-			return &ValidationError{
-				Errors:  validationErrors,
-				Message: "Invalid request payload",
-			}
+			return errors.ValidationError("Invalid request payload", validationErrors)
 		}
-		return &ValidationError{
-			Message: "Invalid request payload",
-		}
+		return errors.ValidationError("Invalid request payload", []errors.FieldError{})
 	}
 
 	return nil

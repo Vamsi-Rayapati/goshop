@@ -1,7 +1,6 @@
 package user
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +13,6 @@ type UserController struct {
 
 func (uc UserController) OnboardUser(c *gin.Context) {
 
-	log.Print("under onboard.......")
 	var onboardRequest OnboardRequest
 	err := validator.ValidateBody(c, &onboardRequest)
 
@@ -26,11 +24,9 @@ func (uc UserController) OnboardUser(c *gin.Context) {
 	userId, _ := c.Get("user_id")
 	userName, _ := c.Get("username")
 
-	log.Println("onboard valid success")
-
-	response, onboardError := uc.service.OnboardUser(userId.(string), userName.(string), onboardRequest)
-	if onboardError != nil {
-		c.JSON(onboardError.Code, onboardError)
+	response, err := uc.service.OnboardUser(userId.(string), userName.(string), onboardRequest)
+	if err != nil {
+		c.JSON(err.Code, err)
 		return
 	}
 
@@ -64,6 +60,12 @@ func (uc UserController) GetUsers(c *gin.Context) {
 }
 
 func (uc UserController) GetUser(c *gin.Context) {
+	userId := c.Param("id")
+	err := validator.ValidateUUID(userId)
+	if err != nil {
+		c.JSON(err.Code, err)
+		return
+	}
 
 }
 
@@ -72,7 +74,7 @@ func (uc UserController) PostUser(c *gin.Context) {
 	err := validator.ValidateBody(c, &postRequest)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, err)
+		c.JSON(err.Code, err)
 		return
 	}
 
