@@ -38,7 +38,7 @@ func (uc UserController) OnboardUser(c *gin.Context) {
 
 }
 
-func (uc UserController) GetUser(c *gin.Context) {
+func (uc UserController) GetCurrentUser(c *gin.Context) {
 
 	value, _ := c.Get("user_id")
 
@@ -49,4 +49,39 @@ func (uc UserController) GetUser(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, res)
+}
+
+func (uc UserController) GetUsers(c *gin.Context) {
+	users, err := uc.service.getUsers()
+
+	if err != nil {
+		c.JSON(err.Code, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, users)
+
+}
+
+func (uc UserController) GetUser(c *gin.Context) {
+
+}
+
+func (uc UserController) PostUser(c *gin.Context) {
+	var postRequest CreateUserRequest
+	err := validator.ValidateBody(c, &postRequest)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+}
+
+func (uc UserController) DeleteUser(c *gin.Context) {
+
+}
+
+func (uc UserController) UpdateUser(c *gin.Context) {
+
 }

@@ -6,7 +6,12 @@ func RegisterRoutes(route *gin.RouterGroup) {
 	userService := UserService{}
 	userController := UserController{service: userService}
 
-	route.GET("/user/details", userController.GetUser)
+	route.GET("/users/me", userController.GetCurrentUser)
+	route.POST("/users/onboard", userController.OnboardUser)
+	route.GET("/users", userController.GetUsers)
+	route.GET("/users/:id", userController.GetUser)
+	route.POST("/users/:id", userController.PostUser)
+	route.DELETE("/users/:id", userController.DeleteUser)
+	route.PUT("/users/:id", userController.UpdateUser)
 
-	route.POST("/user/onboard", userController.OnboardUser)
 }

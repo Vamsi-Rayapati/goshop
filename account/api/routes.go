@@ -1,6 +1,8 @@
 package api
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/smartbot/account/api/user"
 	"github.com/smartbot/account/middleware"
@@ -15,6 +17,11 @@ func RegisterRoutes() *gin.Engine {
 	{
 		user.RegisterRoutes(accountGroup)
 	}
+
+	router.NoRoute(func(c *gin.Context) {
+		c.JSON(http.StatusNotFound, gin.H{})
+		c.Abort()
+	})
 	return router
 
 }

@@ -26,7 +26,7 @@ function MainLayout ()  {
   useEffect(()=> {
     const user = parseJWT();
     getUserReq({
-      url: `${USERS_API}/details`,
+      url: `${USERS_API}/me`,
       method: 'GET',
     })
     .then(res=> {

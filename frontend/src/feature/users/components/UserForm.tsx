@@ -73,22 +73,22 @@ function UserForm({onClose,onSubmit,loading, userId}:Props) {
                 onFinish={onFinish}>
                 <Form.Item<User>
                     label="First Name"
-                    name={'firstName'}
+                    name={'first_name'}
                     rules={[{ required: true, message: 'Please input your first name!' }]}
                     >
                     <Input />
                 </Form.Item>
                 <Form.Item<User>
                     label="Last Name"
-                    name={'lastName'}
+                    name={'last_name'}
                     rules={[{ required: true, message: 'Please input your first name!' }]}
                     >
                     <Input />
                 </Form.Item>
 
                 <Form.Item<User>
-                    label="Email"
-                    name={'email'}
+                    label="User Name"
+                    name={'username'}
                     rules={[
                         { type: 'email', message: 'The input is not valid E-mail!'},
                         { required: true, message: 'Please input your E-mail!'},

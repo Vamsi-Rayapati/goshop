@@ -8,13 +8,14 @@ import (
 	"github.com/smartbot/account/database"
 	"github.com/smartbot/account/models"
 	"github.com/smartbot/account/pkg/dbclient"
+	"github.com/smartbot/account/pkg/utils"
 	"gorm.io/gorm"
 )
 
 type UserService struct {
 }
 
-func (us UserService) GetUser(id string) (*User, *models.ApiError) {
+func (us UserService) GetUser(id string) (*UserResponse, *models.ApiError) {
 	db := dbclient.GetCient()
 	var user database.User
 	result := db.Where("id = ?", id).First(&user)
@@ -31,7 +32,7 @@ func (us UserService) GetUser(id string) (*User, *models.ApiError) {
 		return nil, &models.ApiError{Message: "Failed to get user", Code: http.StatusInternalServerError}
 	}
 
-	return &User{
+	return &UserResponse{
 		ID:             user.ID.String(),
 		Username:       user.Username,
 		Firstname:      user.Firstname,
@@ -44,7 +45,7 @@ func (us UserService) GetUser(id string) (*User, *models.ApiError) {
 	}, nil
 }
 
-func (us UserService) OnboardUser(userId string, userName string, user OnboardRequest) (*User, *models.ApiError) {
+func (us UserService) OnboardUser(userId string, userName string, user OnboardRequest) (*UserResponse, *models.ApiError) {
 	db := dbclient.GetCient()
 	userIdParsed, _ := uuid.Parse(userId)
 	newUser := database.User{
@@ -61,7 +62,7 @@ func (us UserService) OnboardUser(userId string, userName string, user OnboardRe
 		return nil, &models.ApiError{Message: "Failed to create user", Code: 500}
 	}
 
-	return &User{
+	return &UserResponse{
 		ID:             newUser.ID.String(),
 		Username:       newUser.Username,
 		Firstname:      newUser.Firstname,
@@ -71,6 +72,39 @@ func (us UserService) OnboardUser(userId string, userName string, user OnboardRe
 		Mobile:         newUser.Mobile,
 		Role:           newUser.Role,
 		Status:         newUser.Status,
+	}, nil
+
+}
+
+func (us UserService) getUsers() (*UsersResponse, *models.ApiError) {
+	db := dbclient.GetCient()
+	var users []database.User
+	var total int64
+
+	db.Model(&database.User{}).Count(&total)
+	result := db.Find(&users)
+
+	if result.Error != nil {
+		return nil, &models.ApiError{Message: "Failed to get users", Code: http.StatusInternalServerError}
+	}
+
+	userList := utils.Map(users, func(user database.User) UserResponse {
+		return UserResponse{
+			ID:             user.ID.String(),
+			Username:       user.Username,
+			Firstname:      user.Firstname,
+			Lastname:       user.Lastname,
+			PrimaryAddress: user.PrimaryAddress,
+			CountryCode:    user.CountryCode,
+			Mobile:         user.Mobile,
+			Role:           user.Role,
+			Status:         user.Status,
+		}
+	})
+
+	return &UsersResponse{
+		Users: userList,
+		Total: total,
 	}, nil
 
 }
