@@ -11,7 +11,7 @@ type UserController struct {
 	service UserService
 }
 
-func (uc UserController) OnboardUser(c *gin.Context) {
+func (uc *UserController) OnboardUser(c *gin.Context) {
 
 	var onboardRequest OnboardRequest
 	err := validator.ValidateBody(c, &onboardRequest)
@@ -34,7 +34,7 @@ func (uc UserController) OnboardUser(c *gin.Context) {
 
 }
 
-func (uc UserController) GetCurrentUser(c *gin.Context) {
+func (uc *UserController) GetCurrentUser(c *gin.Context) {
 
 	value, _ := c.Get("user_id")
 
@@ -47,8 +47,8 @@ func (uc UserController) GetCurrentUser(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-func (uc UserController) GetUsers(c *gin.Context) {
-	users, err := uc.service.getUsers()
+func (uc *UserController) GetUsers(c *gin.Context) {
+	users, err := uc.service.GetUsers()
 
 	if err != nil {
 		c.JSON(err.Code, err)
@@ -59,7 +59,45 @@ func (uc UserController) GetUsers(c *gin.Context) {
 
 }
 
-func (uc UserController) GetUser(c *gin.Context) {
+func (uc *UserController) GetUser(c *gin.Context) {
+	userId := c.Param("id")
+	err := validator.ValidateUUID(userId)
+	if err != nil {
+		c.JSON(err.Code, err)
+		return
+	}
+
+	res, err := uc.service.GetUser(userId)
+
+	if err != nil {
+		c.JSON(err.Code, err)
+		return
+	}
+	c.JSON(http.StatusOK, res)
+
+}
+
+func (uc *UserController) PostUser(c *gin.Context) {
+	var postRequest CreateUserRequest
+	err := validator.ValidateBody(c, &postRequest)
+
+	if err != nil {
+		c.JSON(err.Code, err)
+		return
+	}
+
+	res, err := uc.service.AddUser(postRequest)
+
+	if err != nil {
+		c.JSON(err.Code, err)
+		return
+	}
+
+	c.JSON(http.StatusCreated, res)
+
+}
+
+func (uc *UserController) DeleteUser(c *gin.Context) {
 	userId := c.Param("id")
 	err := validator.ValidateUUID(userId)
 	if err != nil {
@@ -69,21 +107,12 @@ func (uc UserController) GetUser(c *gin.Context) {
 
 }
 
-func (uc UserController) PostUser(c *gin.Context) {
-	var postRequest CreateUserRequest
-	err := validator.ValidateBody(c, &postRequest)
-
+func (uc *UserController) UpdateUser(c *gin.Context) {
+	userId := c.Param("id")
+	err := validator.ValidateUUID(userId)
 	if err != nil {
 		c.JSON(err.Code, err)
 		return
 	}
-
-}
-
-func (uc UserController) DeleteUser(c *gin.Context) {
-
-}
-
-func (uc UserController) UpdateUser(c *gin.Context) {
 
 }

@@ -3,6 +3,7 @@ package user
 import (
 	"log"
 
+	"github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
 	"github.com/smartbot/account/database"
 	"github.com/smartbot/account/pkg/dbclient"
@@ -14,7 +15,7 @@ import (
 type UserService struct {
 }
 
-func (us UserService) GetUser(id string) (*UserResponse, *errors.ApiError) {
+func (us *UserService) GetUser(id string) (*UserResponse, *errors.ApiError) {
 	db := dbclient.GetCient()
 	var user database.User
 	result := db.Where("id = ?", id).First(&user)
@@ -34,14 +35,13 @@ func (us UserService) GetUser(id string) (*UserResponse, *errors.ApiError) {
 		Firstname:      user.Firstname,
 		Lastname:       user.Lastname,
 		PrimaryAddress: user.PrimaryAddress,
-		CountryCode:    user.CountryCode,
 		Mobile:         user.Mobile,
 		Role:           user.Role,
 		Status:         user.Status,
 	}, nil
 }
 
-func (us UserService) OnboardUser(userId string, userName string, user OnboardRequest) (*UserResponse, *errors.ApiError) {
+func (us *UserService) OnboardUser(userId string, userName string, user OnboardRequest) (*UserResponse, *errors.ApiError) {
 	db := dbclient.GetCient()
 	userIdParsed, _ := uuid.Parse(userId)
 	newUser := database.User{
@@ -54,7 +54,10 @@ func (us UserService) OnboardUser(userId string, userName string, user OnboardRe
 	result := db.Create(&newUser)
 
 	if result.Error != nil {
-		log.Fatalf("OnboardUser: %+v", result.Error)
+		mysqlErr, ok := result.Error.(*mysql.MySQLError)
+		if ok && mysqlErr.Number == 1062 {
+			return nil, errors.ConfilctError("Username already exists")
+		}
 		return nil, errors.InternalServerError("Failed to create user")
 	}
 
@@ -64,7 +67,6 @@ func (us UserService) OnboardUser(userId string, userName string, user OnboardRe
 		Firstname:      newUser.Firstname,
 		Lastname:       newUser.Lastname,
 		PrimaryAddress: newUser.PrimaryAddress,
-		CountryCode:    newUser.CountryCode,
 		Mobile:         newUser.Mobile,
 		Role:           newUser.Role,
 		Status:         newUser.Status,
@@ -72,7 +74,7 @@ func (us UserService) OnboardUser(userId string, userName string, user OnboardRe
 
 }
 
-func (us UserService) getUsers() (*UsersResponse, *errors.ApiError) {
+func (us *UserService) GetUsers() (*UsersResponse, *errors.ApiError) {
 	db := dbclient.GetCient()
 	var users []database.User
 	var total int64
@@ -91,7 +93,6 @@ func (us UserService) getUsers() (*UsersResponse, *errors.ApiError) {
 			Firstname:      user.Firstname,
 			Lastname:       user.Lastname,
 			PrimaryAddress: user.PrimaryAddress,
-			CountryCode:    user.CountryCode,
 			Mobile:         user.Mobile,
 			Role:           user.Role,
 			Status:         user.Status,
@@ -103,4 +104,50 @@ func (us UserService) getUsers() (*UsersResponse, *errors.ApiError) {
 		Total: total,
 	}, nil
 
+}
+
+func (us *UserService) AddUser(user CreateUserRequest) (*UserResponse, *errors.ApiError) {
+	db := dbclient.GetCient()
+
+	newUser := database.User{
+		Username:  user.Username,
+		Mobile:    user.Mobile,
+		Firstname: user.FirstName,
+		Lastname:  user.LastName,
+		Role:      database.UserRole(user.Role),
+	}
+	result := db.Create(&newUser)
+
+	if result.Error != nil {
+		mysqlErr, ok := result.Error.(*mysql.MySQLError)
+		if ok && mysqlErr.Number == 1062 {
+			return nil, errors.ConfilctError("Username already exists")
+		}
+		return nil, errors.InternalServerError("Failed to create user")
+	}
+
+	return &UserResponse{
+		ID:             newUser.ID.String(),
+		Username:       newUser.Username,
+		Firstname:      newUser.Firstname,
+		Lastname:       newUser.Lastname,
+		PrimaryAddress: newUser.PrimaryAddress,
+		Mobile:         newUser.Mobile,
+		Role:           newUser.Role,
+		Status:         newUser.Status,
+	}, nil
+
+}
+
+func DeleteUser(userId string) *errors.ApiError {
+	db := dbclient.GetCient()
+	result := db.Where("id = ?", userId).Delete(&database.User{})
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			return errors.NotFoundError("User not found")
+		}
+		return errors.InternalServerError("Failed to get users")
+	}
+
+	return nil
 }

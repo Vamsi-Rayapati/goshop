@@ -3,6 +3,7 @@ package validator
 import (
 	error "errors"
 	"reflect"
+	"regexp"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -10,15 +11,27 @@ import (
 	"github.com/smartbot/account/pkg/errors"
 )
 
-func GetMessageByTag(tag string) string {
+func GetMessageByTag(err validator.FieldError) string {
+	tag := err.Tag()
+
 	switch tag {
 	case "required":
 		return "required field"
 	case "email":
 		return "invalid email format"
+	case "oneof":
+		return err.Field() + " should be one of " + err.Param()
+	case "mobileNo":
+		return "invalid mobile number format. (ex: +91-9999999999)"
 	default:
 		return tag
 	}
+}
+
+func isValidMobileNumberWithCC(fl validator.FieldLevel) bool {
+	mobileNumber := fl.Field().String()
+	re := regexp.MustCompile(`^\+\d{1,3}-\d{6,15}$`)
+	return re.MatchString(mobileNumber)
 }
 
 func ValidateUUID(id string) *errors.ApiError {
@@ -35,6 +48,7 @@ func ValidateBody(c *gin.Context, obj any) *errors.ApiError {
 	}
 
 	var validate = validator.New()
+	validate.RegisterValidation("mobileNo", isValidMobileNumberWithCC)
 
 	validate.RegisterTagNameFunc(func(field reflect.StructField) string {
 		return field.Tag.Get("json")
@@ -46,7 +60,7 @@ func ValidateBody(c *gin.Context, obj any) *errors.ApiError {
 			validationErrors := []errors.FieldError{}
 
 			for _, e := range ve {
-				validationErrors = append(validationErrors, errors.FieldError{Field: e.Field(), Message: GetMessageByTag(e.Tag())})
+				validationErrors = append(validationErrors, errors.FieldError{Field: e.Field(), Message: GetMessageByTag(e)})
 			}
 
 			return errors.ValidationError("Invalid request payload", validationErrors)

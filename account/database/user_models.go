@@ -8,17 +8,22 @@ import (
 
 type UserRole string
 
-const (
-	Usr        UserRole = "USER"
-	Supervisor UserRole = "SUPERVISOR"
-)
+type UserRolesStruct struct {
+	User       UserRole
+	Supervisor UserRole
+}
+
+var UserRoles = UserRolesStruct{
+	User:       "USER",
+	Supervisor: "SUPERVISOR",
+}
 
 type UserStatus string
 
 const (
 	Active UserStatus = "ACTIVE"
 
-	Inactive UserStatus = "INACTIVE"
+	InActive UserStatus = "INACTIVE"
 )
 
 type User struct {
@@ -27,7 +32,6 @@ type User struct {
 	Firstname      string     `gorm:"type:varchar(255);not null"`
 	Lastname       string     `gorm:"type:varchar(255);not null"`
 	PrimaryAddress string     `gorm:"type:varchar(255)"`
-	CountryCode    string     `gorm:"type:varchar(5)"`
 	Mobile         string     `gorm:"type:varchar(15)"`
 	Role           UserRole   `gorm:"type:enum('USER', 'SUPERVISOR');not null;default:'USER'"`
 	Status         UserStatus `gorm:"type:enum('ACTIVE', 'INACTIVE');not null;default:'INACTIVE'"`

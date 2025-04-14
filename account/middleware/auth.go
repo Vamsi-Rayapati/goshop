@@ -8,7 +8,7 @@ import (
 	"github.com/MicahParks/keyfunc/v3"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/smartbot/account/models"
+	"github.com/smartbot/account/pkg/errors"
 )
 
 type JWKS struct {
@@ -27,7 +27,7 @@ func authenticationMiddleware(c *gin.Context) {
 
 	k, err := keyfunc.NewDefaultCtx(c, []string{"http://fusionauth-service:9011/.well-known/jwks.json"}) // Context is used to end the refresh goroutine.
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, &models.ApiError{
+		c.JSON(http.StatusInternalServerError, &errors.ApiError{
 			Code:    http.StatusInternalServerError,
 			Message: "Failed to authenticate",
 		})

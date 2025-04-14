@@ -10,7 +10,7 @@ func RegisterRoutes(route *gin.RouterGroup) {
 	route.POST("/users/onboard", userController.OnboardUser)
 	route.GET("/users", userController.GetUsers)
 	route.GET("/users/:id", userController.GetUser)
-	route.POST("/users/:id", userController.PostUser)
+	route.POST("/users", userController.PostUser)
 	route.DELETE("/users/:id", userController.DeleteUser)
 	route.PUT("/users/:id", userController.UpdateUser)
 
