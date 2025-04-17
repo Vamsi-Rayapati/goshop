@@ -65,7 +65,7 @@ function MainLayout ()  {
       </Sider>
       <Layout>
        <AppHeader user={getUserRes.data}/>
-        <Content style={{ margin: '0 16px' }}>
+        <Content style={{ margin: '16px 16px' }}>
           <Outlet/>
         </Content>
         <Footer style={{ textAlign: 'center' }}>

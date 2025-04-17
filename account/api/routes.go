@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/smartbot/account/api/avatar"
 	"github.com/smartbot/account/api/user"
 	"github.com/smartbot/account/middleware"
 )
@@ -16,6 +17,7 @@ func RegisterRoutes() *gin.Engine {
 	accountGroup.Use(middleware.Authenticate())
 	{
 		user.RegisterRoutes(accountGroup)
+		avatar.RegisterRoutes(accountGroup)
 	}
 
 	router.NoRoute(func(c *gin.Context) {

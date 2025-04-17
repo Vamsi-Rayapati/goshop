@@ -16,6 +16,19 @@ services:
       interval: 10s
       timeout: 25s
       retries: 5
+  mongodb:
+    container_name: mongodb-service
+    build:
+      context: ./mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    
+    volumes:
+      - mongodb-data:/data/db
   fusionauth:
     container_name: fusionauth-service
     build:
@@ -98,6 +111,8 @@ services:
       - auth
       - shopping
     restart: unless-stopped
+  
 
 volumes:
   mysql-data:
+  mongodb-data:

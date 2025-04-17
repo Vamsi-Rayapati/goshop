@@ -2,7 +2,7 @@ import { Form, Input, Modal, Select, Spin } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { User } from '../types';
 import { DefaultOptionType } from 'antd/es/select';
-import useFetch from 'feature/base/hooks/useFetch';
+import useFetch, { IResponse } from 'feature/base/hooks/useFetch';
 import { USERS_API } from '../constants';
 
 
@@ -10,17 +10,17 @@ interface Props {
     userId?: string;
     onClose: ()=> void;
     onSubmit: (user: Partial<User>) => void;
-    loading: boolean;
+    submitResponse: IResponse<User>
 }
 
 const roleOptions: DefaultOptionType[] = [
-    { label: 'User', value: 'user'},
-    { label: 'Admin', value:'admin'},
-    { label: 'Operator', value: 'operator'}
+    { label: 'User', value: 'USER'},
+    { label: 'Admin', value:'ADMIN'},
+    { label: 'Super Visor', value: 'SUPERVISOR'}
 ]
 
 
-function UserForm({onClose,onSubmit,loading, userId}:Props) {
+function UserForm({onClose,onSubmit, userId, submitResponse}:Props) {
     const title = userId ? 'Edit User' : 'Add User';
     const [changedFields, setChangedFields] = useState<Partial<User>>({});
     const [getUserRes, getUserReq] = useFetch<User>();
@@ -56,6 +56,20 @@ function UserForm({onClose,onSubmit,loading, userId}:Props) {
         else onSubmit(values);
     }
 
+
+    useEffect(()=> {
+        if(submitResponse.isFailed && submitResponse.error) {
+            const errors = submitResponse.error.details?.map((item) => ({
+                name: item.field,
+                errors: [item.message],
+              }));
+            if(errors?.length>0) {
+                form.setFields(errors);
+            }
+
+        }
+    },[submitResponse])
+
     console.log(changedFields);
     return (
         <Modal
@@ -64,7 +78,7 @@ function UserForm({onClose,onSubmit,loading, userId}:Props) {
             open={true}
             title={title}
             okText={'Submit'}
-            okButtonProps={{htmlType:'submit', form: 'user-form', loading: loading}}>
+            okButtonProps={{htmlType:'submit', form: 'user-form', loading: submitResponse.isLoading}}>
             <Spin spinning={getUserRes.isLoading}>
             <Form
                 id='user-form'
@@ -81,7 +95,7 @@ function UserForm({onClose,onSubmit,loading, userId}:Props) {
                 <Form.Item<User>
                     label="Last Name"
                     name={'last_name'}
-                    rules={[{ required: true, message: 'Please input your first name!' }]}
+                    rules={[{ required: true, message: 'Please input your last name!' }]}
                     >
                     <Input />
                 </Form.Item>
@@ -95,6 +109,13 @@ function UserForm({onClose,onSubmit,loading, userId}:Props) {
                     ]}
                     >
                     <Input />
+                </Form.Item>
+
+                <Form.Item<User>
+                    label="Address"
+                    name={'primary_address'}
+                    >
+                    <Input.TextArea />
                 </Form.Item>
 
                 <Form.Item<User>

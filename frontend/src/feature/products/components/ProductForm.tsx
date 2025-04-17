@@ -55,7 +55,7 @@ function ProductForm({onClose,onSubmit,loading, productId}:Props) {
         else onSubmit(values);
     }
 
-    console.log(changedFields);
+
     return (
         <Modal
             onClose={onClose}

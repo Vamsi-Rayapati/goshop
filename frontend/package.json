@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.787.0",
     "@fontsource/poppins": "^5.0.14",
     "@fusionauth/react-sdk": "^2.4.3",
     "@testing-library/jest-dom": "^5.17.0",

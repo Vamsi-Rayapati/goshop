@@ -12,6 +12,6 @@ func RegisterRoutes(route *gin.RouterGroup) {
 	route.GET("/users/:id", userController.GetUser)
 	route.POST("/users", userController.PostUser)
 	route.DELETE("/users/:id", userController.DeleteUser)
-	route.PUT("/users/:id", userController.UpdateUser)
+	route.PATCH("/users/:id", userController.UpdateUser)
 
 }

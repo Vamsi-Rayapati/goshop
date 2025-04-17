@@ -6,6 +6,11 @@ import { sleep } from '../utils/common_utils';
 
 export interface IResponse<T> {
     data: T;
+    error?: {
+        code: number;
+        message: string;
+        details: {field: string, message: string}[]
+    }
     isFailed: boolean;
     isLoading: boolean;
     isSuccess: boolean;
@@ -49,7 +54,7 @@ function useFetch<T>(): [IResponse<T>, (config: AxiosRequestConfig)=> Promise<IR
             message.error(data.message ?? "Something went wrong")
             const newResponse = {
                 ...response,
-                data: data,
+                error: data,
                 message: data.message,
                 statusCode: error.status,
                 isFailed: true,

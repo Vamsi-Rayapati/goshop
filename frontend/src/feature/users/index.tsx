@@ -11,10 +11,11 @@ import { USERS_API } from './constants';
 function Users() {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User|null>();
-  const [getUsersRes,getUsersReq] = useFetch<{users:User[]}>();
-  const [postUserRes, postUserReq] = useFetch();
-  const [patchUserRes, patchUserReq] = useFetch();
+  const [getUsersRes,getUsersReq] = useFetch<{users:User[], total: number}>();
+  const [postUserRes, postUserReq] = useFetch<User>();
+  const [patchUserRes, patchUserReq] = useFetch<User>();
   const [deleteUserRes, deleteUserReq] = useFetch();
+  const [currentPage, setCurrentPage] = useState(1);
   
 
   const onClose = () =>  {
@@ -32,7 +33,11 @@ function Users() {
   const fetchUsers = () => {
     getUsersReq({
       url: USERS_API,
-      method: 'GET'
+      method: 'GET',
+      params: {
+        page_no:currentPage,
+        page_size: 5
+      }
     });
   }
 
@@ -76,7 +81,7 @@ function Users() {
 
   useEffect(()=> {
     fetchUsers();
-  },[]);
+  },[currentPage]);
 
 
   
@@ -89,12 +94,15 @@ function Users() {
         <UsersList
           loading={getUsersRes.isLoading}
           users={getUsersRes.data.users}
+          total={getUsersRes.data.total}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
           onDelete={onDelete}
           onEdit={onEdit}/>
         {openDialog &&
           <UserForm
             userId={selectedUser?.id}
-            loading={postUserRes.isLoading}
+            submitResponse={selectedUser?.id ? patchUserRes : postUserRes }
             onSubmit={onSubmit}
             onClose={onClose} />}
        

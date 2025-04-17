@@ -7,6 +7,7 @@ import Signup from "feature/auth/signup";
 import { ROUTE } from "./constants";
 import Products from "feature/products/components/Products";
 import Onboard from "feature/onboard";
+import Profile from "feature/profile";
 
 const router = createBrowserRouter([
     {
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
         },
         {
           path: ROUTE.PROFILE,
-          element: <Users/>
+          element: <Profile/>
         },
         {
           path: ROUTE.ORDERS,
