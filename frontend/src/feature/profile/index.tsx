@@ -4,7 +4,7 @@ import useFetch from 'feature/base/hooks/useFetch';
 import { ROLE_COLORS, USERS_API } from 'feature/users/constants';
 import { User } from 'feature/users/types';
 import React, { useEffect, useState } from 'react'
-import { API, AVATAR_API } from './constants';
+import { AVATAR_API } from './constants';
 import apiService from 'feature/base/utils/ApiService';
 import { UserOutlined, EditOutlined, HomeOutlined } from '@ant-design/icons';
 import axios from 'axios';
@@ -32,7 +32,7 @@ function Profile() {
   },[])
 
   const props: UploadProps = {
-    customRequest: async (options) => {
+    customRequest: async (options: any) => {
       const {  file, onSuccess, onError } = options;
       console.log("VRRR",file)
 
@@ -92,7 +92,7 @@ const onClose = () =>  {
   setOpenDialog(false);
 }
 
-const onFinish = (payload) => {
+const onFinish = (payload: any) => {
   patchUserReq({
     url: `${USERS_API}/${user.id}`,
     method: 'PATCH',

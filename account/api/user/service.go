@@ -135,7 +135,11 @@ func (us *UserService) GetUser(id string) (*UserResponse, *errors.ApiError) {
 		return nil, errors.InternalServerError("Failed to get user")
 	}
 
-	signedAvatarUrl, _ := aws.GetSignedUrl("goshop-avatar", user.Avatar)
+	var avatar string = "";
+	if user.Avatar != "" {
+		signedAvatarUrl, _ := aws.GetSignedUrl("goshop-avatar", user.Avatar)
+		avatar = *signedAvatarUrl
+	}
 
 	return &UserResponse{
 		ID:             user.ID.String(),
@@ -146,7 +150,7 @@ func (us *UserService) GetUser(id string) (*UserResponse, *errors.ApiError) {
 		PrimaryAddress: user.PrimaryAddress,
 		Mobile:         user.Mobile,
 		Role:           user.Role,
-		Avatar:         *signedAvatarUrl,
+		Avatar:         avatar,
 		Status:         user.Status,
 		CreatedAt:      user.CreatedAt.String(),
 	}, nil

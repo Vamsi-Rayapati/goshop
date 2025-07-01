@@ -1,4 +1,4 @@
-import { Table, TableProps, Tag } from 'antd';
+import { PaginationProps, Table, TableProps, Tag } from 'antd';
 import { User, Role } from '../types';
 import moment from 'moment';
 import UsersListActions from './UsersListActions';
@@ -46,7 +46,7 @@ interface Props {
   onDelete: (user: User)=> void;
   onEdit: (user: User)=> void;
   currentPage: number;
-  setCurrentPage: () => void;
+  setCurrentPage: PaginationProps['onChange'];
 }
 
 function UsersList({users,loading,onDelete,onEdit, total, currentPage, setCurrentPage}: Props) {
