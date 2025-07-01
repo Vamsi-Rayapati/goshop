@@ -94,7 +94,7 @@ services:
       context: ./frontend
       target: dev
     ports:
-      - "5002:5002"
+      - "5000:5000"
     volumes:
       - ./frontend/src:/app/src
     restart: unless-stopped
