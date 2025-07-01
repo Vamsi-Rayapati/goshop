@@ -1,9 +1,7 @@
 import { MenuProps } from "antd";
 import { ROUTE } from "../router/constants";
 import {
-  DesktopOutlined,
   ProductOutlined,
-  PieChartOutlined,
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
