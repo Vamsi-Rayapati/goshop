@@ -6,59 +6,47 @@ import { IProduct } from '../types';
 import Title from 'antd/es/typography/Title';
 import { Button, message } from 'antd';
 import ProductForm from './ProductForm';
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Breadcrumb } from 'antd';
+
+const breadcrumbNameMap: Record<string, string> = {
+  '/console': 'Console',
+  '/console/products': 'Products',
+  '/console/products/add': 'Add Product',
+  '/console/products/edit': 'Edit Product',
+};
 
 function Products() {
-  const [productsRes ,getProductsReq] = useFetch<{products: IProduct[]}>();
-  const [addProductRes ,addProductReq] = useFetch<IProduct>();
-  const [openDialog, setOpenDialog] = useState(false);
+  const location = useLocation();
+  const pathSnippets = location.pathname.split('/').filter(i => i);
+  const urlList = pathSnippets.map((_, idx) => `/${pathSnippets.slice(0, idx + 1).join('/')}`);
 
-  const onAddClick = () => {
-    setOpenDialog(true);
-  }
-
-  const onClose = () => {
-    setOpenDialog(false);
-  }
-
-  const fetchProducts = () => {
-    getProductsReq({
-      url: PRODUCTS_API,
-      method: 'GET',
-    });
-  }
-
-  const handleSuccess = (msg: string) => {
-    message.success(msg);
-    onClose();
-    fetchProducts();
-  }
-
-  const onSubmit = async (product: Partial<IProduct>) => {
-    const res = await addProductReq({
-      url: PRODUCTS_API,
-      method: 'POST',
-      data: product
+  const breadcrumbItems = urlList
+    .map((url, idx) => {
+      let name = breadcrumbNameMap[url];
+      // Handle dynamic edit route
+      if (!name && url.startsWith('/console/products/edit')) {
+        name = breadcrumbNameMap['/console/products/edit'];
+      }
+      if (!name) return null; // Skip if no name
+      return (
+        <Breadcrumb.Item key={url}>
+          {idx === urlList.length - 1 ? (
+            name
+          ) : (
+            <Link to={url}>{name}</Link>
+          )}
+        </Breadcrumb.Item>
+      );
     })
-    if(res.isSuccess) handleSuccess('Product added successfully');
-  }
+    .filter(Boolean);
 
-  useEffect(() => {
-    fetchProducts();
-  },[]);
   return (
     <div>
-      <div className='header flex justify-between items-center'>
-          <Title level={3}>Products</Title>
-          <Button type={'primary'} onClick={onAddClick}>Add Product</Button>
-      </div>
-      <ProductsList loading={productsRes.isLoading} products={productsRes.data.products}/>
-
-      {openDialog &&
-          <ProductForm
-            // userId={selectedUser?.id}
-            loading={addProductRes.isLoading}
-            onSubmit={onSubmit}
-            onClose={onClose} />}
+      <Breadcrumb style={{ marginBottom: 16 }}>
+        {breadcrumbItems}
+      </Breadcrumb>
+      <Outlet/>
     </div>
   )
 }

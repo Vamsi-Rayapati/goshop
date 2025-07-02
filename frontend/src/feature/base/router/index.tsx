@@ -8,6 +8,9 @@ import { ROUTE } from "./constants";
 import Products from "feature/products/components/Products";
 import Onboard from "feature/onboard";
 import Profile from "feature/profile";
+import AddProduct from "feature/products/components/AddProduct";
+import EditProduct from "feature/products/components/EditProduct";
+import ProcuctsList from "feature/products/components/ProcuctsList";
 
 const router = createBrowserRouter([
     {
@@ -32,7 +35,22 @@ const router = createBrowserRouter([
         },
         {
           path: ROUTE.PRODUCTS,
-          element: <Products/>
+          element: <Products/>,
+          children:[
+            {
+              path: '',
+              element: <ProcuctsList/>
+            },
+            {
+              path: 'add',
+              element: <AddProduct/>
+            },
+            {
+              path: "edit/:id",
+              element: <EditProduct/>
+            }
+
+          ]
         }
       ]
     },
