@@ -8,15 +8,17 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/google/uuid"
+	"github.com/smartbot/account/pkg/config"
 	"github.com/smartbot/account/pkg/errors"
 )
 
 func GetS3Client() *s3.Client {
-	creds := credentials.NewStaticCredentialsProvider("", "", "")
+	creds := credentials.NewStaticCredentialsProvider(config.Config.AWSApiKey, config.Config.AWSSecret, "")
 	config := aws.Config{
 		Region:      "us-east-2",
 		Credentials: creds,
 	}
+	
 
 	client := s3.NewFromConfig(config)
 	return client

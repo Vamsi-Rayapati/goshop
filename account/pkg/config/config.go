@@ -18,6 +18,8 @@ type ApplicationConfig struct {
 	DbUserName string
 	DbPassword string
 	FaSecret   string
+	AWSApiKey string
+	AWSSecret string
 }
 
 var Config *ApplicationConfig
@@ -34,6 +36,8 @@ func LoadConfig() *ApplicationConfig {
 		DbUserName: viper.GetString("DB_USER_NAME"),
 		DbPassword: viper.GetString("DB_PASSWORD"),
 		FaSecret:   viper.GetString("FA_SECRET"),
+		AWSApiKey: viper.GetString("AWS_API_KEY"),
+		AWSSecret: viper.GetString("AWS_SECRET"),
 	}
 
 	return Config
