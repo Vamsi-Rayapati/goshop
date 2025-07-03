@@ -50,7 +50,7 @@ function CategoriesList({categories,loading,onDelete,onEdit, total, currentPage,
     const handleDelete = () => onDelete(record);
     return (
         <div>
-            <Button onClick={handleEdit} type={'link'}>Edit</Button>
+            {/* <Button onClick={handleEdit} type={'link'}>Edit</Button> */}
             <Popconfirm
                 title="Delete the category"
                 description="Are you sure to delete this category?"

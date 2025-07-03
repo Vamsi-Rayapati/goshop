@@ -5,6 +5,7 @@ import (
 	"github.com/smartbot/catalog/pkg/dbclient"
 	"github.com/smartbot/catalog/pkg/errors"
 	"github.com/smartbot/catalog/pkg/utils"
+	"gorm.io/gorm"
 )
 
 type CategoriesService struct {
@@ -53,4 +54,17 @@ func (cs *CategoriesService) CreateCategory(req CreateCategoryRequest) (*Categor
 		ID:   category.ID,
 	}, nil
 
+}
+
+func (us *CategoriesService) DeleteCategory(Id string) *errors.ApiError {
+	db := dbclient.GetCient()
+	result := db.Where("id = ?", Id).Delete(&database.Category{})
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			return errors.NotFoundError("Category not found")
+		}
+		return errors.InternalServerError("Failed to get category")
+	}
+
+	return nil
 }

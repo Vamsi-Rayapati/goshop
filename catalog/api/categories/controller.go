@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	apicommon "github.com/smartbot/catalog/pkg/api_common"
 	"github.com/smartbot/catalog/pkg/validator"
 )
 
@@ -50,5 +51,22 @@ func (cc CategoriesController) CreateCategory(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, res)
+
+}
+
+func (cc CategoriesController) DeleteCategory(c *gin.Context) {
+	Id := c.Param("id")
+
+	err := cc.service.DeleteCategory(Id)
+
+	if err != nil {
+		c.JSON(err.Code, err)
+		return
+	}
+
+	c.JSON(http.StatusAccepted, &apicommon.ApiResponse{
+		Code:    http.StatusAccepted,
+		Message: "Category deleted successfully",
+	})
 
 }
