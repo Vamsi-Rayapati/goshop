@@ -16,7 +16,7 @@ const { Option } = Select;
 
 function AddProduct() {
   const [form] = Form.useForm();
-  const [formData, setFormData] = useState<Product>({
+  const [formData, setFormData] = useState<Omit<Product, 'id'>>({
     name: '',
     description: '',
     category_id: 0,
@@ -25,6 +25,8 @@ function AddProduct() {
   });
   const [fileList, setFileList] = useState<any[]>([]);
   const [isFormValid, setIsFormValid] = useState(false);
+  const [isProductCreated, setIsProductCreated] = useState(false);
+  const [createdProduct, setCreatedProduct] = useState<Product | null>(null);
   
   // Use the useFetch hook for API calls
   const [createProductRes, createProductReq] = useFetch<Product>();
@@ -54,7 +56,7 @@ function AddProduct() {
     setIsFormValid(isValid);
   };
 
-  const handleSubmit = async (values: Product) => {
+  const handleSubmit = async (values: Omit<Product, 'id'>) => {
     try {
       const response = await createProductReq({
         url: PRODUCTS_API,
@@ -64,10 +66,11 @@ function AddProduct() {
 
       if (response.isSuccess) {
         message.success('Product added successfully!');
-        form.resetFields();
-        setFormData({ name: '', description: '', category_id: 0, price: 0, stock: 0 });
-        setFileList([]);
-        setIsFormValid(false);
+        // Don't reset form fields - keep them filled
+        // form.resetFields();
+        // setFormData({ name: '', description: '', category_id: 0, price: 0, stock: 0 });
+        setIsProductCreated(true);
+        setCreatedProduct(response.data);
         
         console.log('Product created:', response.data);
         console.log('Files to upload:', fileList);
@@ -87,7 +90,7 @@ function AddProduct() {
   const uploadProps = {
     name: 'file',
     multiple: true,
-    disabled: !isFormValid,
+    disabled: !isProductCreated, // Only enable after product is created
     fileList,
     beforeUpload: () => false, // Prevent auto upload
     onChange: (info: any) => {
@@ -111,9 +114,18 @@ function AddProduct() {
             <div className="flex items-center space-x-2">
               <PlusOutlined className="text-blue-500" />
               <span>Product Information</span>
+              {isProductCreated && (
+                <Text type="success" className="text-sm ml-2">
+                  ✅ Completed
+                </Text>
+              )}
             </div>
           }
-          className="shadow-lg hover:shadow-xl transition-shadow duration-300"
+          className={`shadow-lg transition-all duration-300 ${
+            isProductCreated 
+              ? 'opacity-70 border-green-200' 
+              : 'hover:shadow-xl'
+          }`}
           bodyStyle={{ padding: '24px' }}
         >
           <Form
@@ -122,6 +134,7 @@ function AddProduct() {
             onFinish={handleSubmit}
             onValuesChange={handleFormChange}
             size="large"
+            disabled={isProductCreated}
           >
             <Form.Item
               label="Product Name"
@@ -206,10 +219,15 @@ function AddProduct() {
                 htmlType="submit"
                 size="large"
                 className="w-full rounded-lg bg-blue-500 hover:bg-blue-600 border-blue-500"
-                disabled={!isFormValid}
+                disabled={!isFormValid || isProductCreated}
                 loading={createProductRes.isLoading}
               >
-                {createProductRes.isLoading ? 'Adding Product...' : 'Add Product'}
+                {isProductCreated 
+                  ? 'Product Created Successfully ✅' 
+                  : createProductRes.isLoading 
+                    ? 'Adding Product...' 
+                    : 'Add Product'
+                }
               </Button>
             </Form.Item>
           </Form>
@@ -221,51 +239,66 @@ function AddProduct() {
             <div className="flex items-center space-x-2">
               <CloudUploadOutlined className="text-green-500" />
               <span>Product Images</span>
-              {!isFormValid && (
+              {!isProductCreated && (
                 <Text type="secondary" className="text-sm ml-2">
-                  (Complete form first)
+                  (Create product first)
+                </Text>
+              )}
+              {isProductCreated && (
+                <Text type="success" className="text-sm ml-2">
+                  ✅ Ready to upload
                 </Text>
               )}
             </div>
           }
           className={`shadow-lg transition-all duration-300 ${
-            isFormValid 
+            isProductCreated 
               ? 'hover:shadow-xl border-green-200' 
               : 'opacity-60 border-gray-200'
           }`}
           bodyStyle={{ padding: '24px' }}
-        >
-          <div className="space-y-4">
-            <div className={`transition-opacity duration-300 ${!isFormValid ? 'opacity-50' : ''}`}>
-              <Upload.Dragger 
-                {...uploadProps}
-                className="border-2 border-dashed rounded-lg hover:border-green-400 transition-colors"
-              >
-                <p className="ant-upload-drag-icon">
-                  <CloudUploadOutlined className="text-4xl text-blue-500" />
-                </p>
-                <p className="ant-upload-text text-lg font-medium">
-                  Click or drag files to this area to upload
-                </p>
-                <p className="ant-upload-hint text-gray-500">
-                  Support for single or bulk upload. Strictly prohibited from uploading company data or other banned files.
-                </p>
-              </Upload.Dragger>
-            </div>
+        >        <div className="space-y-4">
+          <div className={`transition-opacity duration-300 ${!isProductCreated ? 'opacity-50' : ''}`}>
+            <Upload.Dragger 
+              {...uploadProps}
+              className="border-2 border-dashed rounded-lg hover:border-green-400 transition-colors"
+            >
+              <p className="ant-upload-drag-icon">
+                <CloudUploadOutlined className="text-4xl text-blue-500" />
+              </p>
+              <p className="ant-upload-text text-lg font-medium">
+                {isProductCreated 
+                  ? 'Click or drag files to this area to upload'
+                  : 'Create product first to enable file upload'
+                }
+              </p>
+              <p className="ant-upload-hint text-gray-500">
+                {isProductCreated 
+                  ? 'Support for single or bulk upload. Upload images for your product.'
+                  : 'File upload will be enabled after product creation.'
+                }
+              </p>
+            </Upload.Dragger>
+          </div>
 
-            {!isFormValid && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                <Text type="warning" className="text-sm">
-                  📝 Please fill out the required product information first:
-                </Text>
-                <ul className="mt-2 text-sm text-gray-600 space-y-1">
-                  <li>• Product Name {formData.name ? '✅' : '❌'}</li>
-                  <li>• Category {formData.category_id ? '✅' : '❌'}</li>
-                  <li>• Price {formData.price > 0 ? '✅' : '❌'}</li>
-                  <li>• Stock Quantity {formData.stock >= 0 ? '✅' : '❌'}</li>
-                </ul>
-              </div>
-            )}
+          {!isProductCreated && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <Text type="secondary" className="text-sm">
+                🎯 Complete and submit the product form to enable image uploads
+              </Text>
+            </div>
+          )}
+
+          {isProductCreated && createdProduct && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <Text type="success" className="text-sm">
+                ✅ Product "{createdProduct.name}" created successfully! You can now upload images.
+              </Text>
+              <Text type="secondary" className="text-xs block mt-1">
+                Product ID: {createdProduct.id}
+              </Text>
+            </div>
+          )}
 
             {fileList.length > 0 && (
               <div className="mt-4">

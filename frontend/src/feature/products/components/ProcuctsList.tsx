@@ -81,13 +81,6 @@ function ProcuctsList() {
 
   const columns = [
     {
-      title: 'Product ID',
-      dataIndex: 'id',
-      key: 'id',
-      width: 100,
-      render: (id: string) => <Text code>{id}</Text>,
-    },
-    {
       title: 'Product Name',
       dataIndex: 'name',
       key: 'name',
@@ -97,10 +90,25 @@ function ProcuctsList() {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
+      width: 200,
       render: (text: string) => (
-        <Text type="secondary" ellipsis={{ tooltip: text }}>
-          {text || 'No description'}
-        </Text>
+        <div 
+          style={{ 
+            maxWidth: 180, 
+            maxHeight: 48,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            wordWrap: 'break-word'
+          }}
+          title={text}
+        >
+          <Text type="secondary">
+            {text || 'No description'}
+          </Text>
+        </div>
       ),
     },
     {
