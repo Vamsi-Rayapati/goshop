@@ -11,6 +11,7 @@ import Profile from "feature/profile";
 import AddProduct from "feature/products/components/AddProduct";
 import EditProduct from "feature/products/components/EditProduct";
 import ProcuctsList from "feature/products/components/ProcuctsList";
+import Categories from "feature/categories/components/Categories";
 
 const router = createBrowserRouter([
     {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
         {
           path: ROUTE.ORDERS,
           element: <Orders/>
+        },
+        {
+          path: ROUTE.CATEGORIES,
+          element: <Categories/>
         },
         {
           path: ROUTE.PRODUCTS,

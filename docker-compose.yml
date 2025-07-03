@@ -74,10 +74,10 @@ services:
       - ./account:/app
     restart: unless-stopped
   
-  shopping:
-    container_name: shopping-service
+  catalog:
+    container_name: catalog-service
     build:
-      context: ./shopping
+      context: ./catalog
       target: dev
     ports:
       - "4003:4003"
@@ -85,7 +85,7 @@ services:
       mysql:
         condition: service_healthy
     volumes:
-      - ./shopping/src:/app/src
+      - ./catalog:/app
     restart: unless-stopped
 
   frontend:
@@ -109,7 +109,7 @@ services:
       - account
       - frontend
       - auth
-      - shopping
+      - catalog
     restart: unless-stopped
   
 

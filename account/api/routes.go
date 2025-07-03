@@ -11,6 +11,7 @@ import (
 
 func RegisterRoutes() *gin.Engine {
 	router := gin.New()
+	router.Use(gin.Logger())
 	accountGroup := router.Group("/account/api/v1")
 
 	// authenticated routes

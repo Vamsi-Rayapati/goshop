@@ -1,6 +1,7 @@
 import { MenuProps } from "antd";
 import { ROUTE } from "../router/constants";
 import {
+  HddOutlined,
   ProductOutlined,
   TeamOutlined,
   UserOutlined,
@@ -25,8 +26,13 @@ export const items: MenuItem[] = [
     //   icon: <PieChartOutlined />
     // },
     {
+      label: 'Categories',
+      key: ROUTE.CATEGORIES,
+      icon:  <ProductOutlined />
+    },
+    {
       label: 'Products',
       key: ROUTE.PRODUCTS,
-      icon: <ProductOutlined />
+      icon: <HddOutlined />
     }
   ];
