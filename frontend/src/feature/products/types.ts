@@ -1,9 +1,8 @@
-export interface IProduct {
-    productId: string;
-    name: string;
-    description: string;
-    price: number;
-    quantity: number;
-    category: string;
-    images: string
+export type Product ={
+  id: string;
+  name: string;
+  description: string;
+  category_id: number;
+  price: number;
+  stock: number;
 }

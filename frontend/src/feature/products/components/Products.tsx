@@ -1,11 +1,3 @@
-import React, { useEffect, useState } from 'react'
-import ProductsList from './ProductsTable'
-import useFetch from 'feature/base/hooks/useFetch'
-import { PRODUCTS_API } from '../constants';
-import { IProduct } from '../types';
-import Title from 'antd/es/typography/Title';
-import { Button, message } from 'antd';
-import ProductForm from './ProductForm';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Breadcrumb } from 'antd';
 
