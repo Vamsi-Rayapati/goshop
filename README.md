@@ -22,13 +22,27 @@
 
 ---
 
+## 📁 Project Structure
+
+```
+project/
+├── goshop/                     # Main project directory with Docker Compose
+├── goshop-account-service/     # User account management microservice
+├── goshop-admin-frontend/      # React-based admin dashboard
+├── goshop-auth-service/        # Authentication microservice
+├── goshop-catalog-service/     # Product catalog microservice
+├── goshop-fusionauth-service/  # FusionAuth identity provider
+└── goshop-mysql-service/       # MySQL database service
+```
+
+---
+
 ## 🏗️ Tech Stack
 
-- **Backend:** Go (Golang), Gorilla Mux / Gin / Fiber (depending on framework)
-- **Database:** PostgreSQL / MySQL
-- **Frontend (Admin):** HTML/CSS + JS or optionally React/Vue
-- **Templating:** Go `html/template` or React (for frontend separation)
-- **ORM:** GORM / sqlx
+- **Backend:** Go (Golang), Gin 
+- **Database:** MySQL
+- **Frontend (Admin):** HTML/CSS + JTSS or optionally React
+- **ORM:** GORM 
 - **Authentication:** JWT-based sessions
 
 ## 🛠️ Build
