@@ -74,6 +74,17 @@ services:
     volumes:
       - ../goshop-catalog-service:/app
     restart: unless-stopped
+  
+  storage:
+    container_name: storage-service
+    build:
+      context: ../goshop-storage-service
+      target: dev
+    ports:
+      - "4004:4004"
+    volumes:
+      - ../goshop-storage-service:/app
+    restart: unless-stopped
 
   frontend:
     container_name: frontend-service
