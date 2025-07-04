@@ -1,1 +1,0 @@
-export const PRODUCTS_API = '/catalog/api/v1/products';
