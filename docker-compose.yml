@@ -3,7 +3,7 @@ services:
   mysql:
     container_name: mysql-service
     build:
-      context: ./mysql
+      context: ../goshop-mysql-service
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
@@ -16,23 +16,10 @@ services:
       interval: 10s
       timeout: 25s
       retries: 5
-  mongodb:
-    container_name: mongodb-service
-    build:
-      context: ./mongodb
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "27017:27017"
-    restart: unless-stopped
-    
-    volumes:
-      - mongodb-data:/data/db
   fusionauth:
     container_name: fusionauth-service
     build:
-      context: ./fusionauth
+      context: ../goshop-fusionauth-service
     depends_on:
       mysql:
         condition: service_healthy
@@ -49,7 +36,7 @@ services:
   auth:
     container_name: auth-service
     build:
-      context: ./auth
+      context: ../goshop-auth-service
       target: dev
     ports:
       - "4002:4002"
@@ -57,13 +44,13 @@ services:
       mysql:
         condition: service_healthy
     volumes:
-      - ./auth:/app
+      - ../goshop-auth-service:/app
     restart: unless-stopped
 
   account:
     container_name: account-service
     build:
-      context: ./account
+      context: ../goshop-account-service
       target: dev
     ports:
       - "4001:4001"
@@ -71,13 +58,13 @@ services:
       mysql:
         condition: service_healthy
     volumes:
-      - ./account:/app
+      - ../goshop-account-service:/app
     restart: unless-stopped
   
   catalog:
     container_name: catalog-service
     build:
-      context: ./catalog
+      context: ../goshop-catalog-service
       target: dev
     ports:
       - "4003:4003"
@@ -85,18 +72,18 @@ services:
       mysql:
         condition: service_healthy
     volumes:
-      - ./catalog:/app
+      - ../goshop-catalog-service:/app
     restart: unless-stopped
 
   frontend:
     container_name: frontend-service
     build:
-      context: ./frontend
+      context: ../goshop-admin-frontend
       target: dev
     ports:
       - "5000:5000"
     volumes:
-      - ./frontend/src:/app/src
+      - ../goshop-admin-frontend/src:/app/src
     restart: unless-stopped
   ingress-nginx:
     container_name: ingress-nginx-service
@@ -115,4 +102,3 @@ services:
 
 volumes:
   mysql-data:
-  mongodb-data:
