@@ -29,9 +29,11 @@ project/
 ├── goshop/                     # Main project directory with Docker Compose
 ├── goshop-account-service/     # User account management microservice
 ├── goshop-admin-frontend/      # React-based admin dashboard
+├── goshop-ecommerce-frontend/  # NextJS-based user shopping interface
 ├── goshop-auth-service/        # Authentication microservice
 ├── goshop-catalog-service/     # Product catalog microservice
 ├── goshop-fusionauth-service/  # FusionAuth identity provider
+├── goshop-storage-service/     # AWS file upload common service
 └── goshop-mysql-service/       # MySQL database service
 ```
 

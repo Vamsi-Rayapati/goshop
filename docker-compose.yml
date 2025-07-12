@@ -96,6 +96,16 @@ services:
     volumes:
       - ../goshop-admin-frontend/src:/app/src
     restart: unless-stopped
+  ecommerce-frontend:
+    container_name: ecommerce-frontend-service
+    build:
+      context: ../goshop-ecommerce-frontend
+      target: dev
+    ports:
+      - "5001:5001"
+    volumes:
+      - ../goshop-ecommerce-frontend/src:/app/src
+    restart: unless-stopped
   ingress-nginx:
     container_name: ingress-nginx-service
     build:
