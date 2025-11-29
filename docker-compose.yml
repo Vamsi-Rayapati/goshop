@@ -1,5 +1,14 @@
 version: '3.8'
 services:
+  redis:
+    image: redis:8.4.0-alpine
+    container_name: redis-service
+    command: ["redis-server", "--requirepass", "password", "--appendonly", "yes"]
+    environment:
+      - REDIS_PASSWORD=password
+    ports:
+      - "6379:6379"
+    restart: always
   mysql:
     container_name: mysql-service
     build:
